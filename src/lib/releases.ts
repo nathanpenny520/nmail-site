@@ -13,8 +13,15 @@ export interface Release {
 }
 
 async function getJson(url: string): Promise<unknown> {
+  // CI（Actions 共享出口 IP）匿名配额 60 次/时常被耗尽 → 403 走回退分支；
+  // 有 GITHUB_TOKEN 时带上认证（Actions 自动注入，配额升到 5000/时），本地无 token 行为不变。
+  const token = process.env.GITHUB_TOKEN
   const res = await fetch(url, {
-    headers: { 'User-Agent': 'nmail-site', Accept: 'application/vnd.github+json' },
+    headers: {
+      'User-Agent': 'nmail-site',
+      Accept: 'application/vnd.github+json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
     signal: AbortSignal.timeout(5000),
   })
   if (!res.ok) throw new Error(`GitHub API ${res.status}`)

@@ -6,21 +6,26 @@ import { fetchLatestRelease, versionOf, REPO_URL } from '../lib/releases'
 const release = await fetchLatestRelease()
 const version = versionOf(release?.tag_name)
 
+// 注意：PyPI 包名是 nmail-app（nmail 已被无关项目占用），命令名是 nmail——
+// 必须 uvx --from；命令与主仓 docs/INSTALL.md 方式④保持一致，勿引入 pipx 等文档外写法。
 const channels = [
   {
     name: 'PyPI（推荐 · 全平台）',
-    note: '需要 Python 3.10+；pipx/uv 会自动处理虚拟环境',
-    commands: ['pipx install nmail-app', '# 或免安装直接运行', 'uvx nmail'],
+    note: '需要 Python 3.10+（uv 自动管理）；命令名 nmail，PyPI 包名 nmail-app',
+    commands: ['uvx --from nmail-app nmail', '# 或常驻安装', 'uv tool install nmail-app'],
+    copy: 'uvx --from nmail-app nmail',
   },
   {
     name: 'Windows（winget）',
     note: '安装后从开始菜单启动；也可在 Release 下载 exe',
-    commands: ['winget install nathanpenny520.nmail'],
+    commands: ['winget install nathanpenny520.Nmail'],
+    copy: 'winget install nathanpenny520.Nmail',
   },
   {
     name: 'macOS（Homebrew）',
     note: 'Apple Silicon；tap 后即可安装与升级',
     commands: ['brew tap nathanpenny520/nmail', 'brew install nmail'],
+    copy: 'brew tap nathanpenny520/nmail && brew install nmail',
   },
 ]
 ---
@@ -37,7 +42,7 @@ const channels = [
         <h3>{c.name}</h3>
         <p class="note">{c.note}</p>
         <pre><code id={`cmd-${c.name.length}-${c.commands[0].slice(0, 6)}`}>{c.commands.join('\n')}</code></pre>
-        <button class="copy" data-copy={c.commands.filter((l) => !l.startsWith('#')).join(' && ')}>复制命令</button>
+        <button class="copy" data-copy={c.copy}>复制命令</button>
       </article>
     ))}
   </section>

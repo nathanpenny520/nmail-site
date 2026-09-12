@@ -64,7 +64,6 @@ const nav = [
         <span>
           <a href={REPO_URL} target="_blank" rel="noopener">GitHub</a>
           · <a href="https://whizzzest.com" target="_blank" rel="noopener">whizzzest.com</a>
-          · 本站由 Cloudflare Pages 托管
         </span>
       </div>
     </footer>
@@ -102,4 +101,25 @@ const nav = [
   main { min-height: calc(100vh - 220px); padding-bottom: 56px; }
   footer { border-top: 1px solid var(--line); padding: 26px 0; color: var(--ink-soft); font-size: 14px; }
   .footer-in { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  /* 移动端：header 改两行（品牌 + 单行横滑导航），避免固定高度被换行撑爆 */
+  @media (max-width: 720px) {
+    .header-in {
+      flex-direction: column;
+      justify-content: center;
+      height: auto;
+      gap: 2px;
+      padding: 10px 20px 0; /* 覆盖 .container 的 padding，横向上边距必须保留 */
+    }
+    nav {
+      flex-wrap: nowrap;
+      gap: 16px;
+      max-width: 100%;
+      overflow-x: auto;
+      padding: 6px 4px 10px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    nav::-webkit-scrollbar { display: none; }
+    nav a { font-size: 14px; white-space: nowrap; }
+  }
 </style>

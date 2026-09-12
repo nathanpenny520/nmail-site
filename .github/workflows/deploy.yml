@@ -20,7 +20,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # GITHUB_TOKEN 由 Actions 自动注入：构建期拉 GitHub Releases 认证后不限流（releases.ts 消费）
       - run: npm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
