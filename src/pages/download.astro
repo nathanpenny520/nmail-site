@@ -14,12 +14,14 @@ const channels = [
     note: 'uvx 无需安装直接运行，uv 自动准备 Python 运行时；任意目录可跑，下次使用再运行同一条命令即可。命令名 nmail，PyPI 包名 nmail-app',
     commands: ['uvx --from nmail-app nmail', '# 或常驻安装', 'uv tool install nmail-app', '# 或用 pip', 'pip install nmail-app'],
     copy: 'uvx --from nmail-app nmail',
+    hint: '没有 uv？官方安装器装一次即可：macOS / Linux 终端执行 <code>curl -LsSf https://astral.sh/uv/install.sh | sh</code>；Windows PowerShell 执行 <code>irm https://astral.sh/uv/install.ps1 | iex</code>（装完重开终端生效）',
   },
   {
     name: 'macOS（Homebrew · Apple Silicon）',
     note: 'Apple Silicon 专用；Linux 用户请用上方 uv / PyPI 方式',
     commands: ['brew tap nathanpenny520/nmail https://github.com/nathanpenny520/homebrew-nmail', 'brew install nmail'],
     copy: 'brew tap nathanpenny520/nmail https://github.com/nathanpenny520/homebrew-nmail && brew install nmail',
+    hint: '没有 Homebrew？到 <a href="https://brew.sh" target="_blank" rel="noopener">brew.sh</a> 按提示安装（一次即可）',
   },
   {
     name: 'Windows（winget · 审核中）',
@@ -43,6 +45,7 @@ const channels = [
         <p class="note">{c.note}</p>
         <pre><code id={`cmd-${c.name.length}-${c.commands[0].slice(0, 6)}`}>{c.commands.join('\n')}</code></pre>
         <button class="copy" data-copy={c.copy}>复制命令</button>
+        {c.hint && <p class="hint" set:html={c.hint} />}
       </article>
     ))}
   </section>
@@ -81,6 +84,9 @@ const channels = [
   .card pre { white-space: pre-wrap; word-break: break-all; } /* 窄卡换行显示；复制走按钮不受影响 */
   .card h3 { margin: 0 0 4px; font-size: 17px; }
   .note { color: var(--ink-soft); font-size: 13.5px; margin: 4px 0 12px; }
+  .hint { color: var(--ink-soft); font-size: 13px; line-height: 1.7; margin: 12px 0 0; }
+  .hint code { font-size: 12px; }
+  .hint a { color: var(--accent); }
   .copy {
     border: 1px solid var(--line);
     background: #fff;

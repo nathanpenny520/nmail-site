@@ -7,6 +7,7 @@
 
 - `fix: 首页「三步开始」仍写 pipx`——09-12 下载页已弃用 pipx，首页漏改；统一为主仓文档口径 `uvx --from nmail-app nmail`。
 - `fix: 下载页渠道与主仓 INSTALL.md 对齐`——brew tap 补全 URL（文档完整写法）；Python 要求 3.10+ → 3.11+（对齐 pyproject requires-python），注明 uvx 由 uv 自动准备运行时；winget 渠道标注「审核中，合入前暂不可用」（manifest 尚未合入 winget-pkgs，站上直接给可用命令会误导）；uv 卡补 pip 备选行；副标题与 meta description 同步（弱化 winget、补「下次使用再运行同一条命令」）。
+- `feat: uv / Homebrew 缺失引导`——用户反馈「不知道 uv / brew 怎么装」：uv 卡补 astral.sh 官方安装器命令（macOS/Linux sh 脚本 + Windows PowerShell），brew 卡补 brew.sh 链接；首页三步步骤 1 加「没装 uv？下载页有官方安装命令」引导。
 
 ## 2026-09-12
 
