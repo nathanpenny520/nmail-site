@@ -17,11 +17,17 @@ import { REPO_URL } from '../lib/releases'
       <pre><code>uvx --from nmail-app nmail</code></pre>
       <button class="copy" data-copy="uvx --from nmail-app nmail">复制命令</button>
     </div>
-    <p class="hint">
-      没有 uv？官方安装器装一次即可：macOS / Linux 终端执行
-      <code>curl -LsSf https://astral.sh/uv/install.sh | sh</code> ·
-      Windows PowerShell 执行 <code>irm https://astral.sh/uv/install.ps1 | iex</code>（uv 自动准备 Python 运行时，装完重开终端生效）
-    </p>
+    <p class="hint">没有 uv？官方安装器装一次即可（装完重开终端生效，uv 自动准备 Python 运行时）：</p>
+    <div class="inst">
+      <span class="os">macOS / Linux</span>
+      <pre><code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
+      <button class="copy" data-copy="curl -LsSf https://astral.sh/uv/install.sh | sh">复制</button>
+    </div>
+    <div class="inst">
+      <span class="os">Windows PowerShell</span>
+      <pre><code>irm https://astral.sh/uv/install.ps1 | iex</code></pre>
+      <button class="copy" data-copy="irm https://astral.sh/uv/install.ps1 | iex">复制</button>
+    </div>
     <p class="hint">想常驻安装？<code>uv tool install nmail-app</code>，之后任意目录敲 <code>nmail</code>。</p>
   </section>
 
@@ -79,6 +85,11 @@ brew install nmail</code></pre>
   .copy:hover { border-color: var(--accent); color: var(--accent); }
   .hint { color: var(--ink-soft); font-size: 13.5px; line-height: 1.8; margin: 14px 0 0; }
   .hint code { font-size: 12.5px; }
+  .inst { display: flex; gap: 10px; align-items: stretch; margin: 10px 0 0; flex-wrap: wrap; }
+  .inst .os { flex-shrink: 0; align-self: center; font-size: 13px; color: var(--ink-soft); width: 128px; }
+  .inst pre { flex: 1; min-width: 260px; margin: 0; display: flex; align-items: center; }
+  .inst pre code { font-size: 13px; }
+  .inst .copy { border-radius: 8px; padding: 0 14px; font-size: 13px; }
 
   .rest h2 { font-size: 21px; margin: 0 0 4px; }
   .grid {
