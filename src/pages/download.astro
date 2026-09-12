@@ -1,62 +1,49 @@
 ---
-// 下载页（REDESIGN_PLAN §10.1）：包管理器一键命令 + GitHub Release 二进制 + 系统要求。
+// 下载页：uvx 一行命令是绝对主角，其余方式一律略写，避免眼花缭乱。
+// 命令与主仓 docs/INSTALL.md 保持一致：PyPI 包名 nmail-app、命令名 nmail（必须 uvx --from），勿引入 pipx 等文档外写法。
 import Base from '../layouts/Base.astro'
-import { fetchLatestRelease, versionOf, REPO_URL } from '../lib/releases'
-
-const release = await fetchLatestRelease()
-const version = versionOf(release?.tag_name)
-
-// 注意：PyPI 包名是 nmail-app（nmail 已被无关项目占用），命令名是 nmail——
-// 必须 uvx --from；命令与主仓 docs/INSTALL.md 方式④保持一致，勿引入 pipx 等文档外写法。
-const channels = [
-  {
-    name: 'uv / PyPI（全平台 · 命令行推荐）',
-    note: 'uvx 无需安装直接运行，uv 自动准备 Python 运行时；任意目录可跑，下次使用再运行同一条命令即可。命令名 nmail，PyPI 包名 nmail-app',
-    commands: ['uvx --from nmail-app nmail', '# 或常驻安装', 'uv tool install nmail-app', '# 或用 pip', 'pip install nmail-app'],
-    copy: 'uvx --from nmail-app nmail',
-    hint: '没有 uv？官方安装器装一次即可：macOS / Linux 终端执行 <code>curl -LsSf https://astral.sh/uv/install.sh | sh</code>；Windows PowerShell 执行 <code>irm https://astral.sh/uv/install.ps1 | iex</code>（装完重开终端生效）',
-  },
-  {
-    name: 'macOS（Homebrew · Apple Silicon）',
-    note: 'Apple Silicon 专用；Linux 用户请用上方 uv / PyPI 方式',
-    commands: ['brew tap nathanpenny520/nmail https://github.com/nathanpenny520/homebrew-nmail', 'brew install nmail'],
-    copy: 'brew tap nathanpenny520/nmail https://github.com/nathanpenny520/homebrew-nmail && brew install nmail',
-    hint: '没有 Homebrew？到 <a href="https://brew.sh" target="_blank" rel="noopener">brew.sh</a> 按提示安装（一次即可）',
-  },
-  {
-    name: 'Windows（winget · 审核中）',
-    note: 'manifest 审核中，合入前命令暂不可用；期间请用 uv / PyPI 或直接下载下方 exe',
-    commands: ['winget install nathanpenny520.Nmail'],
-    copy: 'winget install nathanpenny520.Nmail',
-  },
-]
+import { REPO_URL } from '../lib/releases'
 ---
 
-<Base title="下载" description="下载 Nmail：uv / PyPI / Homebrew / GitHub Release 单文件，Windows · macOS · Linux 全平台。">
+<Base title="下载" description="下载 Nmail：一行命令 uvx 全平台启动，或免安装单文件（Windows · macOS · Linux）。">
   <section class="head">
-    <h1>下载 Nmail {version && <span class="pill">最新 v{version}</span>}</h1>
-    <p class="sub">选择任一方式安装；启动后浏览器自动打开 <code>http://127.0.0.1:8720</code>，下次使用再运行同一条命令即可。</p>
+    <h1>下载 Nmail</h1>
+    <p class="sub">推荐下面这一行命令。启动后浏览器自动打开 <code>http://127.0.0.1:8720</code>，下次使用再运行同一条命令即可。</p>
   </section>
 
-  <section class="grid">
-    {channels.map((c) => (
-      <article class="card">
-        <h3>{c.name}</h3>
-        <p class="note">{c.note}</p>
-        <pre><code id={`cmd-${c.name.length}-${c.commands[0].slice(0, 6)}`}>{c.commands.join('\n')}</code></pre>
-        <button class="copy" data-copy={c.copy}>复制命令</button>
-        {c.hint && <p class="hint" set:html={c.hint} />}
-      </article>
-    ))}
-  </section>
-
-  <section class="rel">
-    <h2>直接下载二进制</h2>
-    <p class="note">
-      免 Python 环境：到 GitHub Releases 下载对应平台可执行文件
-      （Windows exe / macOS arm64 / Linux x64），双击或命令行启动。
+  <section class="get">
+    <h2>一行命令，全平台启动</h2>
+    <div class="onecmd">
+      <pre><code>uvx --from nmail-app nmail</code></pre>
+      <button class="copy" data-copy="uvx --from nmail-app nmail">复制命令</button>
+    </div>
+    <p class="hint">
+      没有 uv？官方安装器装一次即可：macOS / Linux 终端执行
+      <code>curl -LsSf https://astral.sh/uv/install.sh | sh</code> ·
+      Windows PowerShell 执行 <code>irm https://astral.sh/uv/install.ps1 | iex</code>（uv 自动准备 Python 运行时，装完重开终端生效）
     </p>
-    <a class="btn btn-primary" href={`${REPO_URL}/releases/latest`} target="_blank" rel="noopener">前往 GitHub Releases ↗</a>
+    <p class="hint">想常驻安装？<code>uv tool install nmail-app</code>，之后任意目录敲 <code>nmail</code>。</p>
+  </section>
+
+  <section class="rest">
+    <h2>其他方式</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>📦 免安装单文件</h3>
+        <p class="note">不想用命令行？Windows exe / macOS arm64 / Linux x64，下载即用，无需 Python</p>
+        <a class="btn btn-primary" href={`${REPO_URL}/releases/latest`} target="_blank" rel="noopener">前往 GitHub Releases ↗</a>
+      </article>
+      <article class="card">
+        <h3>🍎 macOS · Homebrew</h3>
+        <p class="note">Apple Silicon；没有 Homebrew？到 <a href="https://brew.sh" target="_blank" rel="noopener">brew.sh</a> 安装</p>
+        <pre><code>brew tap nathanpenny520/nmail https://github.com/nathanpenny520/homebrew-nmail
+brew install nmail</code></pre>
+      </article>
+      <article class="card">
+        <h3>🪟 Windows · winget（审核中）</h3>
+        <p class="note">manifest 审核中，合入前暂不可用——期间用上方单文件或一行命令</p>
+      </article>
+    </div>
   </section>
 
   <section class="req">
@@ -64,7 +51,7 @@ const channels = [
     <ul>
       <li>Windows 10+ / macOS 12+ / 主流 Linux（x64 或 Apple Silicon）</li>
       <li>现代浏览器（Chrome / Edge / Firefox / Safari 最新版）作为界面</li>
-      <li>PyPI 方式推荐 uvx（uv 自动准备 Python 运行时，零手动配置）；用 pip 则需 Python 3.11+；二进制单文件不需要 Python</li>
+      <li>uv 方式零 Python 配置（uv 自动准备运行时）；单文件不需要 Python</li>
       <li>可选：任意 OpenAI 兼容模型 API Key（DeepSeek 等），用于 AI 分类/草稿/总管家</li>
     </ul>
   </section>
@@ -72,32 +59,41 @@ const channels = [
 
 <style>
   .head { padding: 52px 0 8px; }
-  h1 { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 0; font-size: 32px; }
+  h1 { margin: 0; font-size: 32px; }
   .sub { color: var(--ink-soft); }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 18px;
-    margin: 28px 0;
-  }
-  .card { border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; }
-  .card pre { white-space: pre-wrap; word-break: break-all; } /* 窄卡换行显示；复制走按钮不受影响 */
-  .card h3 { margin: 0 0 4px; font-size: 17px; }
-  .note { color: var(--ink-soft); font-size: 13.5px; margin: 4px 0 12px; }
-  .hint { color: var(--ink-soft); font-size: 13px; line-height: 1.7; margin: 12px 0 0; }
-  .hint code { font-size: 12px; }
-  .hint a { color: var(--accent); }
+
+  .get { margin: 30px 0 44px; }
+  .get h2 { font-size: 24px; margin: 0 0 16px; }
+  .onecmd { display: flex; gap: 14px; align-items: stretch; flex-wrap: wrap; }
+  .onecmd pre { flex: 1; min-width: 300px; margin: 0; display: flex; align-items: center; }
+  .onecmd pre code { font-size: 20px; }
   .copy {
     border: 1px solid var(--line);
     background: #fff;
-    border-radius: 8px;
-    padding: 6px 14px;
-    font-size: 13px;
+    border-radius: var(--radius);
+    padding: 0 26px;
+    font-size: 15px;
     cursor: pointer;
     color: var(--ink);
   }
   .copy:hover { border-color: var(--accent); color: var(--accent); }
-  .rel, .req { margin: 34px 0; }
+  .hint { color: var(--ink-soft); font-size: 13.5px; line-height: 1.8; margin: 14px 0 0; }
+  .hint code { font-size: 12.5px; }
+
+  .rest h2 { font-size: 21px; margin: 0 0 4px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 18px;
+    margin: 18px 0 0;
+  }
+  .card { border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; }
+  .card pre { white-space: pre-wrap; word-break: break-all; font-size: 13px; }
+  .card h3 { margin: 0 0 4px; font-size: 17px; }
+  .note { color: var(--ink-soft); font-size: 13.5px; margin: 4px 0 12px; }
+  .card .btn { margin-top: 4px; }
+
+  .req { margin: 44px 0 0; }
   h2 { font-size: 21px; margin: 0 0 8px; }
   ul { color: var(--ink-soft); margin: 8px 0 0; padding-left: 22px; }
   li { margin: 4px 0; }
