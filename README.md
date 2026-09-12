@@ -31,7 +31,7 @@ npm run preview
 `npm run build` 的 prebuild 会跑 `scripts/sync-docs.mjs`：把 Nmail 主仓
 `docs/` 里**白名单内**的文档同步到 `src/content/docs/<slug>.md` 并渲染为 `/docs/<slug>`。
 
-- 来源优先级：环境变量 `NMAIL_DOCS_DIR` → 本地同级仓库（`../Nmail/Nmail/docs` 等）→ GitHub raw main（CI 兜底，一篇都拉不到才构建失败）。
+- 来源优先级：环境变量 `NMAIL_DOCS_DIR` → 本地主仓（仓库布局：`Nmail/nmail-site`（本站）与 `Nmail/Nmail`（主仓）并列，即 `../Nmail/docs`）→ GitHub raw main（CI 兜底，一篇都拉不到才构建失败）。
 - **白名单显式列举**（`sync-docs.mjs` 的 `MAP`）：主仓 docs/ 有含凭据、被 gitignore 的内部文档，**严禁改成整目录拷贝**。
 - 同步时自动：相对 `.md` 链接改写为站内路由（白名单外指到 GitHub）、剥掉 H1 的「（docs/xxx.md）」路径注记。
 - 导航元数据（标题/分组/顺序）在 `src/config/docs.ts`；**生成的 md 不入库**（.gitignore）——改文档去主仓改，站上构建自动跟上。

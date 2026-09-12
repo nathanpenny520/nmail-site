@@ -36,10 +36,12 @@ const EXTRA_LINKS = new Map([
   ['README.md', 'https://github.com/nathanpenny520/Nmail/blob/main/README.md'],
 ])
 
+// 2026-09-12 起目录结构为 Nmail/nmail-site（官网）与 Nmail/Nmail（主仓）并列——首选 ../Nmail/docs；
+// 旧结构（两者都在 Mail-managment 下）与其余常见摆法保留兜底，NMAIL_DOCS_DIR 永远最优先
 const localCandidates = [
   process.env.NMAIL_DOCS_DIR,
-  path.join(ROOT, '..', 'Nmail', 'Nmail', 'docs'),
   path.join(ROOT, '..', 'Nmail', 'docs'),
+  path.join(ROOT, '..', 'Nmail', 'Nmail', 'docs'),
 ].filter(Boolean)
 
 async function readLocal(file) {
