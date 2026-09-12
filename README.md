@@ -26,23 +26,19 @@ npm run preview
 
 ## 部署（Cloudflare Pages）
 
-一次性（任选其一）：
+**当前状态（2026-09-12）**：仓库 `github.com/nathanpenny520/nmail-site`（public）；
+Pages 项目 `nmail-site` 已建，直部署完成，线上 <https://nmail-site.pages.dev>。
 
-**A. Git 集成（推荐）**：GitHub 建仓推送后，Cloudflare Dashboard → Workers & Pages → 创建 Pages 项目 →
-连接该仓库 → 构建命令 `npm run build`、输出目录 `dist`。此后 push 即自动部署。
+日常更新任选其一：
 
-**B. 直部署**：
+- **直部署（当前在用）**：`npm run build && npx wrangler pages deploy dist --project-name=nmail-site`
+- **Git 集成**：Cloudflare Dashboard → Workers & Pages → nmail-site → 连接 GitHub 仓库后 push 即自动部署（与直部署二选一即可）
 
-```bash
-npm run build
-npx wrangler login
-npx wrangler pages deploy dist   # wrangler.toml 已配项目名 nmail-site
-```
+### 自定义域名（待做，需 Dashboard 一次点击）
 
-### 自定义域名
-
-whizzzest.com 所在 Cloudflare 账户下：Pages 项目 → Custom domains → 添加 `nmail.whizzzest.com`
-（会自动创建 CNAME 到 Pages 项目；前提主域 DNS 已托管在 Cloudflare）。
+CLI 不支持 Pages 自定义域管理。到 Cloudflare Dashboard → Workers & Pages → `nmail-site`
+→ Custom domains → 添加 `nmail.whizzzest.com`——同账户下会自动创建 CNAME 与证书，
+之后 <https://nmail.whizzzest.com> 即上线。
 
 ### CI 直部署（可选）
 
