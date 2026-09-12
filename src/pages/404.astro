@@ -1,0 +1,22 @@
+---
+// 404 兜底（Workers 静态资产 not_found_handling = "404-page" 会以 404 状态返回本页）
+import Base from '../layouts/Base.astro'
+---
+
+<Base title="页面不存在" description="你访问的页面不存在。">
+  <section class="wrap">
+    <h1>404</h1>
+    <p>页面不存在或已移动。</p>
+    <div class="acts">
+      <a class="btn btn-primary" href="/">回首页</a>
+      <a class="btn btn-ghost" href="/download/">去下载</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .wrap { text-align: center; padding: 90px 0 60px; }
+  h1 { font-size: 64px; margin: 0; color: var(--accent); }
+  p { color: var(--ink-soft); margin: 12px 0 26px; }
+  .acts { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+</style>

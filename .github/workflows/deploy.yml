@@ -1,6 +1,6 @@
-# Cloudflare Pages 直部署（可选）：配置 Secrets 后 push 即部署。
-# 也可以不用本文件，走 Pages 的 Git 集成（见 README）。
-name: Deploy to Cloudflare Pages
+# Cloudflare Workers 直部署（可选）：配置 Secrets 后 push 即部署。
+# 也可以不用本文件，本机 `npx wrangler deploy` 直接发（见 README）。
+name: Deploy to Cloudflare Workers
 
 on:
   push:
@@ -25,4 +25,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=nmail-site
+          command: deploy

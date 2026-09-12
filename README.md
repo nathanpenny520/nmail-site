@@ -1,6 +1,7 @@
 # nmail-site — Nmail 官网
 
-nmail.whizzzest.com 的静态官网（REDESIGN_PLAN §10，D6=A：**Astro + Cloudflare Pages + 独立仓库**）。
+nmail.whizzzest.com 的静态官网（REDESIGN_PLAN §10，D6=A 独立仓库；部署用 **Cloudflare Workers
+静态资产**——方案原文为 Pages，2026-09-12 经用户拍板迁 Workers，理由见下方部署节）。
 零框架 CSS、零客户端 JS（下载页复制按钮除外）；版本徽章与更新日志在**构建期**从
 GitHub Releases 拉取（单一来源，离线构建自动回退本地常量，不阻塞出站）。
 
@@ -24,21 +25,26 @@ npm run preview
 | `/posts/` | 版本动态/博客（`src/content/posts/*.md`） |
 | `/projects.json` | **与个人站 whizzzest.com 共享的项目区块内容源**（`src/content/projects/*.md`） |
 
-## 部署（Cloudflare Pages）
+## 部署（Cloudflare Workers 静态资产）
 
-**当前状态（2026-09-12）**：仓库 `github.com/nathanpenny520/nmail-site`（public）；
-Pages 项目 `nmail-site` 已建，直部署完成，线上 <https://nmail-site.pages.dev>。
+**当前状态（2026-09-12）**：仓库 `github.com/nathanpenny520/nmail-site`（public）。
+线上 **<https://nmail.whizzzest.com>**（自定义域，`wrangler.toml` 声明 `routes.custom_domain=true`，
+部署时自动建 DNS+证书）；兜底入口 <https://nmail-site.nathanpenny.workers.dev>（注：workers.dev
+在大陆网络常不可直连，主入口用自定义域即可）。
 
-日常更新任选其一：
+> 2026-09-12 由 Pages 迁到 Workers：CF 官方推荐新项目用 Workers（Pages 功能基本冻结），
+> 且 Workers 的自定义域名能在 wrangler 配置里声明、`wrangler deploy` 全自动——Pages 只能 Dashboard 手点。
 
-- **直部署（当前在用）**：`npm run build && npx wrangler pages deploy dist --project-name=nmail-site`
-- **Git 集成**：Cloudflare Dashboard → Workers & Pages → nmail-site → 连接 GitHub 仓库后 push 即自动部署（与直部署二选一即可）
+日常发版：
 
-### 自定义域名（待做，需 Dashboard 一次点击）
+```bash
+npm run build
+npx wrangler deploy     # 静态资产 + 自定义域名按 wrangler.toml 自动生效
+```
 
-CLI 不支持 Pages 自定义域管理。到 Cloudflare Dashboard → Workers & Pages → `nmail-site`
-→ Custom domains → 添加 `nmail.whizzzest.com`——同账户下会自动创建 CNAME 与证书，
-之后 <https://nmail.whizzzest.com> 即上线。
+CI（可选）：`.github/workflows/deploy.yml` 已备好——仓库 Secrets 配 `CLOUDFLARE_API_TOKEN`
+（权限：Account · Workers Scripts · Edit + Zone · DNS · Edit）与 `CLOUDFLARE_ACCOUNT_ID`
+后，push 到 main 即自动部署。
 
 ### CI 直部署（可选）
 

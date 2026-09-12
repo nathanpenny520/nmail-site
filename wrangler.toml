@@ -1,4 +1,16 @@
-# Cloudflare Pages 配置（wrangler v3+）：`npx wrangler pages deploy dist`
+# Nmail 官网 —— Cloudflare Workers（静态资产）配置
+# 2026-09-12 由 Pages 迁到 Workers（CF 官方推荐新项目用 Workers；自定义域名可在配置声明，
+# wrangler deploy 全自动建 DNS 与证书——Pages 的域名只能在 Dashboard 点）。
 name = "nmail-site"
-pages_build_output_dir = "dist"
 compatibility_date = "2026-09-01"
+workers_dev = true # 保留 nmail-site.<子域>.workers.dev 作为自定义域之外的兜底入口
+
+[assets]
+directory = "./dist"
+not_found_handling = "404-page"        # 未命中路径返回 /404.html（404 状态码）
+html_handling = "auto-trailing-slash"  # /download 与 /download/ 都命中同名目录 index.html
+
+# 自定义域名：whizzzest.com 区域需在当前 wrangler 登录的账户下（部署时自动建 CNAME+证书）
+[[routes]]
+pattern = "nmail.whizzzest.com"
+custom_domain = true

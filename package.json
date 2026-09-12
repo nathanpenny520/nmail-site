@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "private": true,
-  "description": "Nmail 官网（nmail.whizzzest.com）— Astro 静态站，Cloudflare Pages 部署",
+  "description": "Nmail 官网（nmail.whizzzest.com）— Astro 静态站，Cloudflare Workers 部署",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
