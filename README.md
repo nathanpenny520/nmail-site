@@ -53,14 +53,19 @@ npm run build
 npx wrangler deploy     # 静态资产 + 自定义域名按 wrangler.toml 自动生效
 ```
 
-CI（可选）：`.github/workflows/deploy.yml` 已备好——仓库 Secrets 配 `CLOUDFLARE_API_TOKEN`
-（权限：Account · Workers Scripts · Edit + Zone · DNS · Edit）与 `CLOUDFLARE_ACCOUNT_ID`
-后，push 到 main 即自动部署。
+CI（已配好，push main 即发）：`.github/workflows/deploy.yml`——仓库 Secrets 配
+`CLOUDFLARE_API_TOKEN`（权限：Account · Workers Scripts · Edit + Zone · DNS · Edit）与
+`CLOUDFLARE_ACCOUNT_ID`。构建期拉 GitHub Releases 用 Actions 自动注入的 `GITHUB_TOKEN`
+（deploy.yml 已接），无需额外配置。
 
-### CI 直部署（可选）
+## 开发文档
 
-`.github/workflows/deploy.yml` 已备好：在仓库 Secrets 配 `CLOUDFLARE_API_TOKEN`（权限：
-Account · Cloudflare Pages · Edit）与 `CLOUDFLARE_ACCOUNT_ID` 后，push 到 main 即自动部署。
+仓库自身约定与细节看这几份（**开发文档，不出现在站上**；站上 /docs 是主仓文档镜像）：
+
+- [CLAUDE.md](CLAUDE.md) — 工作规范：常用命令、提交纪律、红线
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — 目录结构与数据流
+- [docs/DEPLOY.md](docs/DEPLOY.md) — Workers 部署、域名、CI、故障排查
+- [docs/CHANGELOG.md](docs/CHANGELOG.md) — 本仓库变更记录
 
 ## 与个人站同步（REDESIGN_PLAN §10.3）
 
