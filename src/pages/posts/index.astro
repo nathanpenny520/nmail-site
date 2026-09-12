@@ -1,0 +1,51 @@
+---
+// 动态/博客列表（REDESIGN_PLAN §10.1）：手写 Markdown（content collections）；
+// 个人站 whizzzest.com 项目区块经 /projects.json 引用同一内容源。
+import { getCollection } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+
+const posts = (await getCollection('posts')).sort((a, b) =>
+  b.data.date.localeCompare(a.data.date))
+---
+
+<Base title="动态" description="Nmail 版本动态与博客。">
+  <section class="head">
+    <h1>动态</h1>
+    <p class="sub">版本发布与产品思考。</p>
+  </section>
+
+  <section class="list">
+    {posts.map((post) => (
+      <a class="item" href={`/posts/${post.id}/`}>
+        <div>
+          <h2>{post.data.title}</h2>
+          {post.data.summary && <p>{post.data.summary}</p>}
+        </div>
+        <time datetime={post.data.date}>{post.data.date}</time>
+      </a>
+    ))}
+    {posts.length === 0 && <p class="empty">还没有动态。</p>}
+  </section>
+</Base>
+
+<style>
+  .head { padding: 52px 0 4px; }
+  h1 { margin: 0; font-size: 32px; }
+  .sub { color: var(--ink-soft); }
+  .list { margin-top: 22px; display: flex; flex-direction: column; }
+  .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 18px;
+    padding: 18px 4px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+  }
+  .item:hover { text-decoration: none; }
+  .item:hover h2 { color: var(--accent); }
+  h2 { margin: 0 0 4px; font-size: 18px; transition: color .12s; }
+  p { margin: 0; color: var(--ink-soft); font-size: 14px; }
+  time { color: var(--ink-soft); font-size: 13px; white-space: nowrap; }
+  .empty { color: var(--ink-soft); margin-top: 24px; }
+</style>

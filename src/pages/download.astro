@@ -1,0 +1,105 @@
+---
+// 下载页（REDESIGN_PLAN §10.1）：包管理器一键命令 + GitHub Release 二进制 + 系统要求。
+import Base from '../layouts/Base.astro'
+import { fetchLatestRelease, versionOf, REPO_URL } from '../lib/releases'
+
+const release = await fetchLatestRelease()
+const version = versionOf(release?.tag_name)
+
+const channels = [
+  {
+    name: 'PyPI（推荐 · 全平台）',
+    note: '需要 Python 3.10+；pipx/uv 会自动处理虚拟环境',
+    commands: ['pipx install nmail-app', '# 或免安装直接运行', 'uvx nmail'],
+  },
+  {
+    name: 'Windows（winget）',
+    note: '安装后从开始菜单启动；也可在 Release 下载 exe',
+    commands: ['winget install nathanpenny520.nmail'],
+  },
+  {
+    name: 'macOS（Homebrew）',
+    note: 'Apple Silicon；tap 后即可安装与升级',
+    commands: ['brew tap nathanpenny520/nmail', 'brew install nmail'],
+  },
+]
+---
+
+<Base title="下载" description="下载 Nmail：PyPI / winget / Homebrew / GitHub Release 二进制，Windows · macOS · Linux 全平台。">
+  <section class="head">
+    <h1>下载 Nmail {version && <span class="pill">最新 v{version}</span>}</h1>
+    <p class="sub">选择任一方式安装；启动后浏览器自动打开 <code>http://127.0.0.1:8720</code>。</p>
+  </section>
+
+  <section class="grid">
+    {channels.map((c) => (
+      <article class="card">
+        <h3>{c.name}</h3>
+        <p class="note">{c.note}</p>
+        <pre><code id={`cmd-${c.name.length}-${c.commands[0].slice(0, 6)}`}>{c.commands.join('\n')}</code></pre>
+        <button class="copy" data-copy={c.commands.filter((l) => !l.startsWith('#')).join(' && ')}>复制命令</button>
+      </article>
+    ))}
+  </section>
+
+  <section class="rel">
+    <h2>直接下载二进制</h2>
+    <p class="note">
+      免 Python 环境：到 GitHub Releases 下载对应平台可执行文件
+      （Windows exe / macOS arm64 / Linux x64），双击或命令行启动。
+    </p>
+    <a class="btn btn-primary" href={`${REPO_URL}/releases/latest`} target="_blank" rel="noopener">前往 GitHub Releases ↗</a>
+  </section>
+
+  <section class="req">
+    <h2>系统要求</h2>
+    <ul>
+      <li>Windows 10+ / macOS 12+ / 主流 Linux（x64 或 Apple Silicon）</li>
+      <li>现代浏览器（Chrome / Edge / Firefox / Safari 最新版）作为界面</li>
+      <li>PyPI 方式需 Python 3.10+（二进制方式不需要）</li>
+      <li>可选：任意 OpenAI 兼容模型 API Key（DeepSeek 等），用于 AI 分类/草稿/总管家</li>
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .head { padding: 52px 0 8px; }
+  h1 { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 0; font-size: 32px; }
+  .sub { color: var(--ink-soft); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 18px;
+    margin: 28px 0;
+  }
+  .card { border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; }
+  .card pre { white-space: pre-wrap; word-break: break-all; } /* 窄卡换行显示；复制走按钮不受影响 */
+  .card h3 { margin: 0 0 4px; font-size: 17px; }
+  .note { color: var(--ink-soft); font-size: 13.5px; margin: 4px 0 12px; }
+  .copy {
+    border: 1px solid var(--line);
+    background: #fff;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--ink);
+  }
+  .copy:hover { border-color: var(--accent); color: var(--accent); }
+  .rel, .req { margin: 34px 0; }
+  h2 { font-size: 21px; margin: 0 0 8px; }
+  ul { color: var(--ink-soft); margin: 8px 0 0; padding-left: 22px; }
+  li { margin: 4px 0; }
+</style>
+
+<script>
+  // 复制按钮：点击把 data-copy 写入剪贴板并短暂反馈
+  document.querySelectorAll<HTMLButtonElement>('.copy').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(btn.dataset.copy ?? '')
+      const old = btn.textContent
+      btn.textContent = '已复制 ✓'
+      setTimeout(() => { btn.textContent = old }, 1500)
+    })
+  })
+</script>

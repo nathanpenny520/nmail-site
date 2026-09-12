@@ -1,0 +1,123 @@
+---
+// 首页（REDESIGN_PLAN §10.1）：Hero + 六特性卡 + 版本徽章 + 下载 CTA。
+import Base from '../layouts/Base.astro'
+import { fetchLatestRelease, versionOf, FALLBACK_VERSION } from '../lib/releases'
+
+const release = await fetchLatestRelease()
+const version = versionOf(release?.tag_name) || FALLBACK_VERSION
+const releaseUrl = release?.html_url ?? 'https://github.com/nathanpenny520/Nmail/releases'
+
+const features = [
+  {
+    icon: '🤖', title: 'AI 分类与整理',
+    desc: '每封来信自动分类、判重要性、标「需回复」；营销邮件自动归档，一句话让 AI 总管家批量整理邮箱。',
+  },
+  {
+    icon: '✍️', title: 'AI 起草 · 你把关',
+    desc: '待回复的邮件 AI 先拟好草稿，你改一改再发；发送永远需要你批准，审批/自动双模式由你掌控。',
+  },
+  {
+    icon: '📊', title: '每日摘要',
+    desc: '每天固定时间一份邮箱综述：多少封、哪些重要、谁在等你回复——早上两分钟掌握全部。',
+  },
+  {
+    icon: '📥', title: '多账号聚合',
+    desc: 'Gmail / Outlook / QQ / 163……全部账号一个收件箱，智能视图跨账号浏览，文件夹像资源管理器一样管理。',
+  },
+  {
+    icon: '🔒', title: '本地优先隐私',
+    desc: '服务只跑在本机（127.0.0.1），邮件、通讯录、密钥全部留在你的设备，没有云端中转，没有账号体系。',
+  },
+  {
+    icon: '💻', title: '跨平台使用',
+    desc: 'Windows / macOS / Linux，一个浏览器即可访问；PyPI、Homebrew、winget、安装包多种分发方式。',
+  },
+]
+---
+
+<Base title="AI 驱动的本地邮箱管家">
+  <section class="hero">
+    <span class="pill"><span class="dot"></span> 最新版本 v{version} · <a href={releaseUrl} target="_blank" rel="noopener">查看发布</a></span>
+    <h1>把邮箱交给 AI 总管家<br /><span class="grad">数据一步也不离开你的电脑</span></h1>
+    <p class="sub">
+      Nmail 是一个本地运行的 AI 聚合邮箱客户端：多账号收在一个收件箱，
+      AI 替你分类、归档、拟稿，而发不发、动不动，永远由你决定。
+    </p>
+    <div class="cta">
+      <a class="btn btn-primary" href="/download/">免费下载</a>
+      <a class="btn btn-ghost" href="https://github.com/nathanpenny520/Nmail" target="_blank" rel="noopener">GitHub 源码 ↗</a>
+    </div>
+  </section>
+
+  <section class="grid">
+    {features.map((f) => (
+      <article class="card">
+        <div class="icon">{f.icon}</div>
+        <h3>{f.title}</h3>
+        <p>{f.desc}</p>
+      </article>
+    ))}
+  </section>
+
+  <section class="band">
+    <div>
+      <h2>三步开始</h2>
+      <ol>
+        <li>安装并启动：<code>pipx install nmail-app</code>（或到 <a href="/download/">下载页</a> 选你的平台）</li>
+        <li>浏览器自动打开 <code>http://127.0.0.1:8720</code>，添加你的邮箱账号</li>
+        <li>在设置里填入任意 OpenAI 兼容模型的 Key，AI 总管家即刻上岗</li>
+      </ol>
+    </div>
+    <a class="btn btn-primary" href="/download/">前往下载</a>
+  </section>
+</Base>
+
+<style>
+  .hero { text-align: center; padding: 76px 0 40px; }
+  .hero h1 {
+    font-size: clamp(30px, 5vw, 46px);
+    line-height: 1.25;
+    margin: 18px 0 0;
+    letter-spacing: -0.5px;
+  }
+  .grad {
+    background: linear-gradient(90deg, #4f46e5, #0ea5e9);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .sub { max-width: 620px; margin: 18px auto 0; color: var(--ink-soft); font-size: 17px; }
+  .cta { margin-top: 30px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+    margin: 46px 0;
+  }
+  .card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 22px 18px;
+    background: #fff;
+  }
+  .card .icon { font-size: 26px; }
+  .card h3 { margin: 10px 0 6px; font-size: 17px; }
+  .card p { margin: 0; color: var(--ink-soft); font-size: 14.5px; }
+
+  .band {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 28px 30px;
+    margin-bottom: 30px;
+  }
+  .band h2 { margin: 0 0 10px; font-size: 20px; }
+  .band ol { margin: 0; padding-left: 20px; color: var(--ink-soft); }
+  .band li { margin: 4px 0; }
+</style>

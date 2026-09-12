@@ -1,0 +1,104 @@
+---
+// 全站骨架：顶部导航 + 页脚。中文优先；构建期拿最新版本号做导航栏徽章。
+import '../../src/styles/global.css'
+import { fetchLatestRelease, versionOf, REPO_URL } from '../../src/lib/releases'
+
+interface Props {
+  title: string
+  description?: string
+}
+const { title, description = 'Nmail —— AI 驱动的本地聚合邮箱客户端：AI 分类整理、草稿待审、每日摘要、多账号聚合，数据全程留在本机。' } = Astro.props
+const release = await fetchLatestRelease()
+const version = versionOf(release?.tag_name)
+const path = Astro.url.pathname
+const nav = [
+  { href: '/', label: '首页' },
+  { href: '/download/', label: '下载' },
+  { href: '/features/', label: '功能' },
+  { href: '/changelog/', label: '更新日志' },
+  { href: '/posts/', label: '动态' },
+]
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · Nmail</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={`${title} · Nmail`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Nmail" />
+    <meta property="og:image" content="/icon-512.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icon-512.png" />
+    <meta name="theme-color" content="#4f46e5" />
+  </head>
+  <body>
+    <header>
+      <div class="container header-in">
+        <a class="brand" href="/">
+          <img src="/icon-192.png" alt="Nmail" width="28" height="28" />
+          <strong>Nmail</strong>
+          {version && <span class="pill ver">v{version}</span>}
+        </a>
+        <nav>
+          {nav.map((item) => (
+            <a class:list={[{ active: path === item.href || (item.href !== '/' && path.startsWith(item.href)) }]} href={item.href}>{item.label}</a>
+          ))}
+          <a href={REPO_URL} target="_blank" rel="noopener">GitHub ↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <slot />
+    </main>
+
+    <footer>
+      <div class="container footer-in">
+        <span>© {new Date().getFullYear()} Nmail · MIT License</span>
+        <span>
+          <a href={REPO_URL} target="_blank" rel="noopener">GitHub</a>
+          · <a href="https://whizzzest.com" target="_blank" rel="noopener">whizzzest.com</a>
+          · 本站由 Cloudflare Pages 托管
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(255, 255, 255, .86);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .header-in {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--ink);
+    font-size: 17px;
+  }
+  .brand:hover { text-decoration: none; }
+  .ver { font-size: 12px; padding: 1px 9px; }
+  nav { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+  nav a { color: var(--ink-soft); font-size: 15px; }
+  nav a:hover { color: var(--ink); text-decoration: none; }
+  nav a.active { color: var(--accent); font-weight: 600; }
+  main { min-height: calc(100vh - 220px); padding-bottom: 56px; }
+  footer { border-top: 1px solid var(--line); padding: 26px 0; color: var(--ink-soft); font-size: 14px; }
+  .footer-in { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+</style>

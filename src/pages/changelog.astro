@@ -1,0 +1,62 @@
+---
+// 更新日志页（REDESIGN_PLAN §10.1）：构建期从 GitHub Releases 渲染（单源）；
+// API 不可达时给出回退提示，不阻塞构建。
+import Base from '../layouts/Base.astro'
+import { fetchReleases, REPO_URL, FALLBACK_VERSION } from '../lib/releases'
+
+const releases = await fetchReleases(15)
+---
+
+<Base title="更新日志" description="Nmail 版本发布记录（来源：GitHub Releases，单一数据源）。">
+  <section class="head">
+    <h1>更新日志</h1>
+    <p class="sub">与 <a href={`${REPO_URL}/releases`} target="_blank" rel="noopener">GitHub Releases</a> 同源，发版即更新。</p>
+  </section>
+
+  {releases.length === 0 && (
+    <p class="empty">
+      暂时无法从 GitHub 拉取发布记录（构建环境离线或 API 限流）。
+      请直接访问 <a href={`${REPO_URL}/releases`} target="_blank" rel="noopener">GitHub Releases</a> 查看；
+      当前最新版本 v{FALLBACK_VERSION}。
+    </p>
+  )}
+
+  {releases.map((r) => (
+    <article class="rel">
+      <header>
+        <h2>{r.name || r.tag_name}</h2>
+        {r.published_at && <time datetime={r.published_at}>{r.published_at.slice(0, 10)}</time>}
+        <a class="raw" href={r.html_url} target="_blank" rel="noopener">在 GitHub 查看 ↗</a>
+      </header>
+      <pre class="notes">{r.body || '（无发布说明）'}</pre>
+    </article>
+  ))}
+</Base>
+
+<style>
+  .head { padding: 52px 0 4px; }
+  h1 { margin: 0; font-size: 32px; }
+  .sub { color: var(--ink-soft); }
+  .empty {
+    margin-top: 24px;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    color: var(--ink-soft);
+  }
+  .rel { margin: 34px 0; border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 24px; }
+  .rel header { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .rel h2 { margin: 0; font-size: 19px; }
+  time { color: var(--ink-soft); font-size: 13.5px; }
+  .raw { margin-left: auto; font-size: 13px; }
+  .notes {
+    white-space: pre-wrap;
+    background: var(--bg-soft);
+    color: var(--ink);
+    font-size: 13.5px;
+    margin: 14px 0 0;
+    padding: 16px 18px;
+    max-height: 420px;
+    overflow: auto;
+  }
+</style>

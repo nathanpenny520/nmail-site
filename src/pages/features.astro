@@ -1,0 +1,80 @@
+---
+// 功能页（REDESIGN_PLAN §10.1）：按用户视角介绍 v0.4 主线能力（随版本迭代补充）。
+import Base from '../layouts/Base.astro'
+
+const groups = [
+  {
+    title: '邮箱，像资源管理器一样',
+    items: [
+      ['多账号聚合收件箱', 'Gmail / Outlook / QQ / 163 等 20 家预设，添加即用；跨账号智能视图一次看全。'],
+      ['文件夹树 · 拖拽 · 右键', '新建/重命名/删除服务器文件夹，邮件多选、拖拽移动、右键批量操作，快捷键 j/k/e/# 齐备。'],
+      ['真实归档', '归档 = 每个账号服务器端的 Archived 文件夹，网页端邮箱里同样可见，随时拖回撤销。'],
+    ],
+  },
+  {
+    title: 'AI 总管家',
+    items: [
+      ['对话式操作', '「把上周的营销邮件归档，然后给老张回一封」——搜、读、整理、起草、发送，对话完成。'],
+      ['审批 / 自动双模式', '默认每一步等你批准（可改参数再批）；AI 专属邮箱可开自动模式，收件人白名单+每日限额兜底。'],
+      ['全量审计 · 一键撤销', '移动/归档/标记全部留痕，做完不放心？一键移回原样。'],
+    ],
+  },
+  {
+    title: '写信与草稿',
+    items: [
+      ['AI 拟稿 · 人工把关', '需回复的邮件 AI 先起草进「待审」，可改可弃，批准才发；发送永远经过你的手。'],
+      ['富文本写信台', 'TipTap 编辑器：字体/颜色/列表/表格/图片/引用，附件即传即存，定时发送、模板、签名。'],
+      ['通讯录自动积累', '往来地址自动入册，写信时收件人自动联想，不用再手打地址。'],
+    ],
+  },
+  {
+    title: '与自动化',
+    items: [
+      ['每日摘要', '固定时间一份综述：收件概况、重要邮件、待回复清单，AI 综述一段话掌握全天。'],
+      ['对外 API', '本机 /api/ext/v1：API Key + scope 分级，iOS 快捷指令、Raycast、n8n 随便接；远程设备走自建隧道。'],
+      ['本地隐私', '服务只监听 127.0.0.1，数据与密钥全在本机；不注册账号、不连云端、MIT 开源。'],
+    ],
+  },
+]
+---
+
+<Base title="功能" description="Nmail 功能一览：资源管理器式邮箱管理、AI 总管家（审批/自动双模式）、统一草稿、通讯录联想、每日摘要、对外 API、本地隐私。">
+  <section class="head">
+    <h1>功能一览</h1>
+    <p class="sub">v0.4 主线能力；随版本迭代持续补充。</p>
+  </section>
+  {groups.map((g) => (
+    <section class="group">
+      <h2>{g.title}</h2>
+      <div class="grid">
+        {g.items.map(([t, d]) => (
+          <article class="card">
+            <h3>{t}</h3>
+            <p>{d}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  ))}
+  <section class="cta-band">
+    <a class="btn btn-primary" href="/download/">立即体验</a>
+    <a class="btn btn-ghost" href="https://github.com/nathanpenny520/Nmail/tree/main/docs" target="_blank" rel="noopener">阅读文档 ↗</a>
+  </section>
+</Base>
+
+<style>
+  .head { padding: 52px 0 4px; }
+  h1 { margin: 0; font-size: 32px; }
+  .sub { color: var(--ink-soft); }
+  .group { margin: 30px 0 6px; }
+  h2 { font-size: 21px; margin: 0 0 12px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .card { border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; background: #fff; }
+  .card h3 { margin: 0 0 6px; font-size: 16px; }
+  .card p { margin: 0; color: var(--ink-soft); font-size: 14px; }
+  .cta-band { display: flex; gap: 14px; margin: 38px 0 10px; flex-wrap: wrap; }
+</style>

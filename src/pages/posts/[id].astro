@@ -1,0 +1,43 @@
+---
+// 动态详情页：content collection 渲染 Markdown。
+import { getCollection, render } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts')
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }))
+}
+
+const { post } = Astro.props
+const { Content } = await render(post)
+---
+
+<Base title={post.data.title} description={post.data.summary ?? post.data.title}>
+  <article class="post">
+    <header>
+      <h1>{post.data.title}</h1>
+      <div class="meta">
+        <time datetime={post.data.date}>{post.data.date}</time>
+        {post.data.tags.map((t: string) => <span class="tag">{t}</span>)}
+      </div>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+    <p class="back"><a href="/posts/">← 返回动态</a></p>
+  </article>
+</Base>
+
+<style>
+  .post { max-width: 720px; margin: 0 auto; padding: 52px 0 10px; }
+  h1 { margin: 0 0 8px; font-size: 30px; line-height: 1.3; }
+  .meta { display: flex; gap: 10px; align-items: center; color: var(--ink-soft); font-size: 13.5px; }
+  .tag { border: 1px solid var(--line); border-radius: 999px; padding: 1px 10px; }
+  .prose { margin-top: 26px; font-size: 15.5px; }
+  .prose :global(h2) { font-size: 21px; margin: 30px 0 10px; }
+  .prose :global(h3) { font-size: 17px; margin: 24px 0 8px; }
+  .prose :global(p) { margin: 10px 0; }
+  .prose :global(ul) { padding-left: 22px; }
+  .prose :global(li) { margin: 5px 0; }
+  .back { margin-top: 40px; font-size: 14px; }
+</style>
