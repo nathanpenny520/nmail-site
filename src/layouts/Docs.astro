@@ -1,0 +1,96 @@
+---
+// 文档页布局：左侧分组导航 + 右侧正文；导航元数据来自 src/config/docs.ts。
+import Base from './Base.astro'
+import { DOCS, DOC_GROUPS, docBySlug } from '../config/docs'
+
+interface Props {
+  slug: string
+}
+const { slug } = Astro.props
+const meta = docBySlug(slug)
+const title = meta ? `${meta.title} · 文档` : '文档'
+const description = meta?.desc ?? 'Nmail 文档'
+---
+
+<Base title={title} description={description}>
+  <div class="docs">
+    <aside>
+      <a class="home" href="/docs/">📚 文档首页</a>
+      {DOC_GROUPS.map((group) => (
+        <div class="group">
+          <h3>{group}</h3>
+          {DOCS.filter((d) => d.group === group).map((d) => (
+            <a class:list={[{ active: d.slug === slug }]} href={`/docs/${d.slug}/`}>{d.title}</a>
+          ))}
+        </div>
+      ))}
+    </aside>
+    <article class="prose">
+      <slot />
+    </article>
+  </div>
+</Base>
+
+<style>
+  .docs {
+    display: grid;
+    grid-template-columns: 230px minmax(0, 1fr);
+    gap: 40px;
+    padding: 36px 0 20px;
+  }
+  aside { position: sticky; top: 84px; align-self: start; }
+  .home {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 14px;
+    font-size: 15px;
+  }
+  .group { margin-bottom: 18px; }
+  h3 {
+    margin: 0 0 6px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  aside a:not(.home) {
+    display: block;
+    padding: 4px 10px;
+    border-radius: 8px;
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.9;
+  }
+  aside a:not(.home):hover { color: var(--ink); background: var(--bg-soft); text-decoration: none; }
+  aside a.active { color: var(--accent); background: #eef2ff; font-weight: 600; }
+
+  @media (max-width: 860px) {
+    .docs { grid-template-columns: 1fr; }
+    aside { position: static; display: flex; flex-wrap: wrap; gap: 4px 16px; }
+    .group { display: contents; }
+    .group h3 { display: none; }
+  }
+
+  /* 正文排版（渲染主仓同步来的 Markdown） */
+  .prose { font-size: 15.5px; min-width: 0; }
+  .prose :global(h1) { font-size: 26px; margin: 8px 0 18px; letter-spacing: -0.3px; }
+  .prose :global(h2) { font-size: 20px; margin: 30px 0 12px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .prose :global(h3) { font-size: 16.5px; margin: 22px 0 8px; }
+  .prose :global(p) { margin: 10px 0; }
+  .prose :global(ul), .prose :global(ol) { padding-left: 24px; margin: 10px 0; }
+  .prose :global(li) { margin: 5px 0; }
+  .prose :global(blockquote) {
+    margin: 14px 0;
+    padding: 8px 16px;
+    border-left: 3px solid var(--accent);
+    background: var(--bg-soft);
+    border-radius: 0 8px 8px 0;
+    color: var(--ink-soft);
+  }
+  .prose :global(blockquote p) { margin: 4px 0; }
+  .prose :global(table) { border-collapse: collapse; margin: 14px 0; width: 100%; font-size: 14px; display: block; overflow-x: auto; }
+  .prose :global(th), .prose :global(td) { border: 1px solid var(--line); padding: 7px 12px; text-align: left; vertical-align: top; }
+  .prose :global(th) { background: var(--bg-soft); font-weight: 600; white-space: nowrap; }
+  .prose :global(hr) { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
+  .prose :global(a) { word-break: break-all; }
+</style>

@@ -1,0 +1,53 @@
+---
+// 文档首页：按分组列出全部文档（内容源=Nmail 主仓 docs/，构建期同步）。
+import Base from '../../layouts/Base.astro'
+import { DOCS, DOC_GROUPS } from '../../config/docs'
+---
+
+<Base title="文档" description="Nmail 文档中心：安装、使用指南、FAQ、隐私与安全、OAuth2 配置、对外 API、架构与路线图。">
+  <section class="head">
+    <h1>文档中心</h1>
+    <p class="sub">
+      与 <a href="https://github.com/nathanpenny520/Nmail/tree/main/docs" target="_blank" rel="noopener">GitHub 主仓 docs/</a>
+      同源——主仓更新，这里随构建自动跟上。遇到问题先看 <a href="/docs/faq/">常见问题</a>。
+    </p>
+  </section>
+
+  {DOC_GROUPS.map((group) => (
+    <section class="group">
+      <h2>{group}</h2>
+      <div class="grid">
+        {DOCS.filter((d) => d.group === group).map((d) => (
+          <a class="card" href={`/docs/${d.slug}/`}>
+            <h3>{d.title}</h3>
+            <p>{d.desc}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .head { padding: 52px 0 4px; }
+  h1 { margin: 0; font-size: 32px; }
+  .sub { color: var(--ink-soft); }
+  .group { margin: 26px 0 4px; }
+  h2 { font-size: 15px; color: var(--ink-soft); font-weight: 600; margin: 0 0 10px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    color: var(--ink);
+    transition: border-color .12s;
+  }
+  .card:hover { border-color: var(--accent); text-decoration: none; }
+  .card h3 { margin: 0 0 4px; font-size: 15.5px; }
+  .card:hover h3 { color: var(--accent); }
+  .card p { margin: 0; color: var(--ink-soft); font-size: 13.5px; }
+</style>

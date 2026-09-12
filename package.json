@@ -6,7 +6,9 @@
   "description": "Nmail 官网（nmail.whizzzest.com）— Astro 静态站，Cloudflare Workers 部署",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/sync-docs.mjs",
     "build": "astro build",
+    "sync-docs": "node scripts/sync-docs.mjs",
     "preview": "astro preview"
   },
   "dependencies": {

@@ -22,8 +22,19 @@ npm run preview
 | `/download/` | PyPI / winget / Homebrew 一键命令（复制按钮）+ GitHub 二进制 + 系统要求 |
 | `/features/` | 用户视角功能页（随版本迭代补充） |
 | `/changelog/` | 构建期渲染 GitHub Releases（单源） |
+| `/docs/` | **文档中心**：构建期从主仓 `docs/` 白名单同步渲染（见下节） |
 | `/posts/` | 版本动态/博客（`src/content/posts/*.md`） |
 | `/projects.json` | **与个人站 whizzzest.com 共享的项目区块内容源**（`src/content/projects/*.md`） |
+
+## 文档上站（单一来源：主仓 docs/）
+
+`npm run build` 的 prebuild 会跑 `scripts/sync-docs.mjs`：把 Nmail 主仓
+`docs/` 里**白名单内**的文档同步到 `src/content/docs/<slug>.md` 并渲染为 `/docs/<slug>`。
+
+- 来源优先级：环境变量 `NMAIL_DOCS_DIR` → 本地同级仓库（`../Nmail/Nmail/docs` 等）→ GitHub raw main（CI 兜底，一篇都拉不到才构建失败）。
+- **白名单显式列举**（`sync-docs.mjs` 的 `MAP`）：主仓 docs/ 有含凭据、被 gitignore 的内部文档，**严禁改成整目录拷贝**。
+- 同步时自动：相对 `.md` 链接改写为站内路由（白名单外指到 GitHub）、剥掉 H1 的「（docs/xxx.md）」路径注记。
+- 导航元数据（标题/分组/顺序）在 `src/config/docs.ts`；**生成的 md 不入库**（.gitignore）——改文档去主仓改，站上构建自动跟上。
 
 ## 部署（Cloudflare Workers 静态资产）
 

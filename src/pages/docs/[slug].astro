@@ -1,0 +1,33 @@
+---
+// 文档详情页：渲染同步自主仓的 Markdown（src/content/docs/<slug>.md，构建期生成）。
+import { getEntry } from 'astro:content'
+import { render } from 'astro:content'
+import Docs from '../../layouts/Docs.astro'
+import { DOCS, docBySlug } from '../../config/docs'
+
+export function getStaticPaths() {
+  return DOCS.map((d) => ({ params: { slug: d.slug } }))
+}
+
+const { slug } = Astro.params
+const meta = docBySlug(slug!)
+if (!meta) throw new Error(`未知文档 slug：${slug}`)
+const entry = await getEntry('docs', slug!)
+if (!entry) {
+  throw new Error(`文档 ${slug} 未同步：先运行 node scripts/sync-docs.mjs（或 npm run build，会自动同步）`)
+}
+const { Content } = await render(entry)
+---
+
+<Docs slug={slug!}>
+  <Content />
+  <p class="edit">
+    发现问题？直接到
+    <a href={`https://github.com/nathanpenny520/Nmail/tree/main/docs`} target="_blank" rel="noopener">主仓 docs/</a>
+    改这篇文档（本页随构建自动更新）。
+  </p>
+</Docs>
+
+<style>
+  .edit { margin-top: 40px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 13.5px; }
+</style>

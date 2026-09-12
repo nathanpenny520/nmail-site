@@ -2,3 +2,5 @@ node_modules/
 dist/
 .astro/
 .DS_Store
+# 构建期由 scripts/sync-docs.mjs 从主仓同步生成，不入库（单一来源=主仓 docs/）
+src/content/docs/

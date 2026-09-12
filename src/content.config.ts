@@ -12,6 +12,12 @@ const posts = defineCollection({
   }),
 })
 
+// 文档（scripts/sync-docs.mjs 构建期从主仓白名单同步生成，不手改）：
+// 元数据（标题/分组/顺序）在 src/config/docs.ts，正文自带 H1，无需 frontmatter
+const docs = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/docs' }),
+})
+
 // projects/*.md 是 nmail.whizzzest.com 与个人站 whizzzest.com 共享的「项目区块」
 // 单一内容源（REDESIGN_PLAN §10.3）：构建产物 /projects.json 供个人站 fetch。
 const projects = defineCollection({
@@ -26,4 +32,4 @@ const projects = defineCollection({
   }),
 })
 
-export const collections = { posts, projects }
+export const collections = { posts, projects, docs }
