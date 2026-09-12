@@ -3,6 +3,11 @@
 只记本仓库（官网）变更；产品变更看主仓 `Nmail/Nmail/docs/CHANGELOG.md`。
 惯例：最新在上；条目 = `日期 类型: 一句话`，重要改动附动机。
 
+## 2026-09-13
+
+- `fix: 首页「三步开始」仍写 pipx`——09-12 下载页已弃用 pipx，首页漏改；统一为主仓文档口径 `uvx --from nmail-app nmail`。
+- `fix: 下载页渠道与主仓 INSTALL.md 对齐`——brew tap 补全 URL（文档完整写法）；Python 要求 3.10+ → 3.11+（对齐 pyproject requires-python），注明 uvx 由 uv 自动准备运行时；winget 渠道标注「审核中，合入前暂不可用」（manifest 尚未合入 winget-pkgs，站上直接给可用命令会误导）；uv 卡补 pip 备选行；副标题与 meta description 同步（弱化 winget、补「下次使用再运行同一条命令」）。
+
 ## 2026-09-12
 
 - `feat: 站点内容自动化`——deploy.yml 增加每日定时构建（兜底主仓 docs/Releases 变更）与 workflow_dispatch（供主仓 release.sh 发版后触发，1-2 分钟内同步）；wrangler 入 devDependencies（修 CI 里 wrangler-action 的 npx 无 TTY 取消）。

@@ -10,30 +10,30 @@ const version = versionOf(release?.tag_name)
 // 必须 uvx --from；命令与主仓 docs/INSTALL.md 方式④保持一致，勿引入 pipx 等文档外写法。
 const channels = [
   {
-    name: 'PyPI（推荐 · 全平台）',
-    note: '需要 Python 3.10+（uv 自动管理）；命令名 nmail，PyPI 包名 nmail-app',
-    commands: ['uvx --from nmail-app nmail', '# 或常驻安装', 'uv tool install nmail-app'],
+    name: 'uv / PyPI（全平台 · 命令行推荐）',
+    note: 'uvx 无需安装直接运行，uv 自动准备 Python 运行时；任意目录可跑，下次使用再运行同一条命令即可。命令名 nmail，PyPI 包名 nmail-app',
+    commands: ['uvx --from nmail-app nmail', '# 或常驻安装', 'uv tool install nmail-app', '# 或用 pip', 'pip install nmail-app'],
     copy: 'uvx --from nmail-app nmail',
   },
   {
-    name: 'Windows（winget）',
-    note: '安装后从开始菜单启动；也可在 Release 下载 exe',
-    commands: ['winget install nathanpenny520.Nmail'],
-    copy: 'winget install nathanpenny520.Nmail',
+    name: 'macOS（Homebrew · Apple Silicon）',
+    note: 'Apple Silicon 专用；Linux 用户请用上方 uv / PyPI 方式',
+    commands: ['brew tap nathanpenny520/nmail https://github.com/nathanpenny520/homebrew-nmail', 'brew install nmail'],
+    copy: 'brew tap nathanpenny520/nmail https://github.com/nathanpenny520/homebrew-nmail && brew install nmail',
   },
   {
-    name: 'macOS（Homebrew）',
-    note: 'Apple Silicon；tap 后即可安装与升级',
-    commands: ['brew tap nathanpenny520/nmail', 'brew install nmail'],
-    copy: 'brew tap nathanpenny520/nmail && brew install nmail',
+    name: 'Windows（winget · 审核中）',
+    note: 'manifest 审核中，合入前命令暂不可用；期间请用 uv / PyPI 或直接下载下方 exe',
+    commands: ['winget install nathanpenny520.Nmail'],
+    copy: 'winget install nathanpenny520.Nmail',
   },
 ]
 ---
 
-<Base title="下载" description="下载 Nmail：PyPI / winget / Homebrew / GitHub Release 二进制，Windows · macOS · Linux 全平台。">
+<Base title="下载" description="下载 Nmail：uv / PyPI / Homebrew / GitHub Release 单文件，Windows · macOS · Linux 全平台。">
   <section class="head">
     <h1>下载 Nmail {version && <span class="pill">最新 v{version}</span>}</h1>
-    <p class="sub">选择任一方式安装；启动后浏览器自动打开 <code>http://127.0.0.1:8720</code>。</p>
+    <p class="sub">选择任一方式安装；启动后浏览器自动打开 <code>http://127.0.0.1:8720</code>，下次使用再运行同一条命令即可。</p>
   </section>
 
   <section class="grid">
@@ -61,7 +61,7 @@ const channels = [
     <ul>
       <li>Windows 10+ / macOS 12+ / 主流 Linux（x64 或 Apple Silicon）</li>
       <li>现代浏览器（Chrome / Edge / Firefox / Safari 最新版）作为界面</li>
-      <li>PyPI 方式需 Python 3.10+（二进制方式不需要）</li>
+      <li>PyPI 方式推荐 uvx（uv 自动准备 Python 运行时，零手动配置）；用 pip 则需 Python 3.11+；二进制单文件不需要 Python</li>
       <li>可选：任意 OpenAI 兼容模型 API Key（DeepSeek 等），用于 AI 分类/草稿/总管家</li>
     </ul>
   </section>
