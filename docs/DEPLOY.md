@@ -23,18 +23,35 @@ npm run build          # prebuild 同步主仓文档 + 构建期拉 Releases
 npx wrangler deploy    # 静态资产 + 域名按 wrangler.toml 自动生效
 ```
 
-## CI 自动部署（已配好，push main 即发）
+## CI 自动部署（三个触发器）
 
 `.github/workflows/deploy.yml`：Actions checkout → `npm ci` → `npm run build` → `wrangler-action@v3 deploy`。
 
-需要仓库 Secrets（Settings → Secrets and variables → Actions）：
+| 触发器 | 覆盖什么 |
+|---|---|
+| `push: main` | 本仓库改动（页面/样式/同步脚本） |
+| `workflow_dispatch` | 主仓发版联动：release.sh 末尾 `gh workflow run deploy.yml -R nathanpenny520/nmail-site`（本机 gh 登录态，零额外配置），发版后 1-2 分钟站点跟上 |
+| `schedule: 0 1 * * *` | 每日兜底：主仓 docs/ 的提交最迟 24h 上站（sync-docs 从 raw main 拉），Releases 同理。注意仓库 60 天无活动 GitHub 会自动停用 schedule |
 
-- `CLOUDFLARE_API_TOKEN`：权限 **Account · Workers Scripts · Edit** + **Zone · DNS · Edit**
-- `CLOUDFLARE_ACCOUNT_ID`
+### Secrets（一次性配置）
+
+需要仓库 Secrets（Settings → Secrets and variables → Actions，或本机 `gh secret set`）：
+
+- `CLOUDFLARE_API_TOKEN`：CF dashboard → My Profile → API Tokens → Create Token，
+  用 **Edit Cloudflare Workers** 模板并追加 **Zone · DNS · Edit** 权限（自定义域名自动建 DNS/证书需要）
+- `CLOUDFLARE_ACCOUNT_ID`：见 wrangler.toml 同账户，`npx wrangler whoami` 可查
+
+```bash
+gh secret set CLOUDFLARE_API_TOKEN -R nathanpenny520/nmail-site      # 粘贴 token
+gh secret set CLOUDFLARE_ACCOUNT_ID -R nathanpenny520/nmail-site
+```
 
 构建期拉 GitHub Releases 用 **`GITHUB_TOKEN`**——Actions 自动注入，无需配置；
 deploy.yml 的 build 步骤已 `env: GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}` 传给
 releases.ts（匿名请求在 Actions 共享 IP 上必被限流，changelog 会退化为空态）。
+
+wrangler 在 devDependencies 里锁版本——wrangler-action 的 npx 在无 TTY 的 CI 里
+现下载会被取消（"no YES option"），本地有依赖则直接用。
 
 ## 与个人站同步（whizzzest.com）
 

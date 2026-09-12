@@ -1,11 +1,14 @@
-# Cloudflare Workers 直部署（可选）：配置 Secrets 后 push 即部署。
+# Cloudflare Workers 自动部署：push main / 手动触发 / 每日定时（定时构建兜底主仓 docs 与
+# Releases 的变更——全站内容都是构建期拉取，见 docs/ARCHITECTURE.md）。
 # 也可以不用本文件，本机 `npx wrangler deploy` 直接发（见 README）。
 name: Deploy to Cloudflare Workers
 
 on:
   push:
     branches: [main]
-  workflow_dispatch:
+  workflow_dispatch: {} # 主仓 release.sh 发版后用 gh workflow run 触发，站点 1-2 分钟内跟上
+  schedule:
+    - cron: '0 1 * * *' # 每天 09:00（UTC+8）；注意：仓库 60 天无活动 GitHub 会自动停用 schedule
 
 jobs:
   deploy:

@@ -53,10 +53,12 @@ npm run build
 npx wrangler deploy     # 静态资产 + 自定义域名按 wrangler.toml 自动生效
 ```
 
-CI（已配好，push main 即发）：`.github/workflows/deploy.yml`——仓库 Secrets 配
-`CLOUDFLARE_API_TOKEN`（权限：Account · Workers Scripts · Edit + Zone · DNS · Edit）与
-`CLOUDFLARE_ACCOUNT_ID`。构建期拉 GitHub Releases 用 Actions 自动注入的 `GITHUB_TOKEN`
-（deploy.yml 已接），无需额外配置。
+CI（`.github/workflows/deploy.yml`）三个触发器：push main / 主仓发版联动
+（release.sh 末尾 `gh workflow run`，发版后 1-2 分钟站点跟上）/ 每日定时构建
+（兜底主仓 docs 与 Releases 变更）。需要 Secrets：`CLOUDFLARE_API_TOKEN`
+（Workers Scripts Edit + Zone DNS Edit）与 `CLOUDFLARE_ACCOUNT_ID`，配置步骤见
+[docs/DEPLOY.md](docs/DEPLOY.md)；构建期拉 Releases 用 Actions 自动注入的
+`GITHUB_TOKEN`，无需额外配置。
 
 ## 开发文档
 
