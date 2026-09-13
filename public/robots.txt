@@ -1,8 +1,6 @@
-# 自建 robots.txt。
-# ⚠ 已知限制：whizzzest.com 区域开启了 Cloudflare「AI 审计 → 托管 robots.txt」，
-# 它在边缘拦截全部子域名的 /robots.txt（本文件线上实际不生效，2026-09-13 验证）。
-# 要放开 AI 爬虫需到 Cloudflare Dashboard → whizzzest.com → AI 审计里编辑托管配置；
-# 关闭托管后本文件才会生效（含 Sitemap 行）。
+# nmail 官网 robots.txt。2026-09-13 起生效：用户已在 Cloudflare Dashboard 关闭
+# whizzzest.com 区域的「AI 审计 → 托管 robots.txt」（此前它在边缘拦截本文件）。
+# 主站 whizzzest.com 有自己的源站 robots.txt，不受影响；两站 AI 爬虫均已放开。
 User-agent: *
 Allow: /
 
