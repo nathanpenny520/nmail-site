@@ -18,7 +18,7 @@ npx wrangler deploy   # 发版（先 build；需 wrangler login，域名按 wran
 
 1. **文档优先**：页面/管线改动先更新 `docs/`（本文件 / ARCHITECTURE / DEPLOY），写清要改什么；方案类改动先给方案再动手。
 2. **变更必记**：改动与 `docs/CHANGELOG.md` 条目放同一个提交；架构/部署变化同步更 ARCHITECTURE / DEPLOY。
-3. **验证后提交**：`npm run build` 必须通过（它同时验证 sync-docs 与 Releases 拉取/回退两条链路）；涉及 UI 的改动 `npm run preview` 过一眼再交。
+3. **验证后提交并推送**：`npm run build` 必须通过（它同时验证 sync-docs 与 Releases 拉取/回退两条链路）；涉及 UI 的改动 `npm run preview` 过一眼再交。「及时提交」= 验证通过当轮 `git commit` + `git push`——push 到 main 自动部署（1-2 分钟上线），线上站点同步更新，不要把改动留在本地。
 4. **生成的文件不入库、不手改**：`src/content/docs/*.md` 是 sync-docs 产物（.gitignore）——改文档去主仓 `../Nmail/docs/` 改，站上构建自动跟上；导航元数据在 `src/config/docs.ts`。
 5. **同步白名单是安全红线**：主仓 `docs/` 有含凭据、被 gitignore 的内部文档，`scripts/sync-docs.mjs` 的 `MAP` 严禁改成整目录拷贝。
 6. **安装命令只抄主仓文档**：PyPI 包名 `nmail-app`、命令名 `nmail`（`uvx nmail` 会装到无关包）；下载页各渠道命令与 `../Nmail/docs/INSTALL.md` 保持一致，不引入文档外写法（如 pipx）。
