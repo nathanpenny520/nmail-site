@@ -1,9 +1,9 @@
 # nmail-site — Nmail 官网
 
-nmail.whizzzest.com 的静态官网（REDESIGN_PLAN §10，D6=A 独立仓库；部署用 **Cloudflare Workers
-静态资产**——方案原文为 Pages，2026-09-12 经用户拍板迁 Workers，理由见下方部署节）。
-零框架 CSS、零客户端 JS（下载页复制按钮除外）；版本徽章与更新日志在**构建期**从
-GitHub Releases 拉取（单一来源，离线构建自动回退本地常量，不阻塞出站）。
+Nmail 官网 <https://nmail.whizzzest.com> 的静态站点（Astro 5，对应主仓 REDESIGN_PLAN §10 的
+P8 阶段，独立仓库）。托管用 **Cloudflare Workers 静态资产**（2026-09-12 由 Pages 迁入 Workers，
+理由见下方部署节）。零框架 CSS、零客户端 JS（下载页复制按钮除外）；版本徽章与更新日志在
+**构建期**从 GitHub Releases 拉取（单一来源，离线构建自动回退本地常量，不阻塞出站）。
 
 ## 本地开发
 
@@ -31,7 +31,7 @@ npm run preview
 `npm run build` 的 prebuild 会跑 `scripts/sync-docs.mjs`：把 Nmail 主仓
 `docs/` 里**白名单内**的文档同步到 `src/content/docs/<slug>.md` 并渲染为 `/docs/<slug>`。
 
-- 来源优先级：环境变量 `NMAIL_DOCS_DIR` → 本地主仓（仓库布局：`Nmail/nmail-site`（本站）与 `Nmail/Nmail`（主仓）并列，即 `../Nmail/docs`）→ GitHub raw main（CI 兜底，一篇都拉不到才构建失败）。
+- 来源优先级：环境变量 `NMAIL_DOCS_DIR` → 本地主仓（与主仓并列检出，即 `../Nmail/docs`）→ GitHub raw main（CI 兜底，一篇都拉不到才构建失败）。
 - **白名单显式列举**（`sync-docs.mjs` 的 `MAP`）：主仓 docs/ 有含凭据、被 gitignore 的内部文档，**严禁改成整目录拷贝**。
 - 同步时自动：相对 `.md` 链接改写为站内路由（白名单外指到 GitHub）、剥掉 H1 的「（docs/xxx.md）」路径注记。
 - 导航元数据（标题/分组/顺序）在 `src/config/docs.ts`；**生成的 md 不入库**（.gitignore）——改文档去主仓改，站上构建自动跟上。
@@ -78,5 +78,4 @@ CI（`.github/workflows/deploy.yml`）三个触发器：push main / 主仓发版
 ## 备注与后续
 
 - OG 图暂用应用图标（`public/icon-512.png`）；有了应用截图后放 `public/screenshot.png` 并在首页 hero 引用。
-- 「文档」按方案不双维护：站内仅三步快速开始，详细文档链 GitHub `docs/` 目录。
 - 博客按发布节奏手写；构建期拉不到 Releases 时 changelog 页有优雅回退提示。
