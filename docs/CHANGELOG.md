@@ -5,6 +5,7 @@
 
 ## 2026-09-13
 
+- `feat: 补 favicon.ico`——此前仅 PNG 链接声明，根路径 /favicon.ico 404（旧工具/抓取器/订阅器按惯例直接请求它）；由 icon-512.png 缩 16+32 两尺寸打包成标准 ICO（PNG 条目，sips 缩放 + stdlib struct 封容器，无新依赖）；Base.astro head 补 `<link rel="icon" href="/favicon.ico">`，PNG 192 与 apple-touch-icon 保留。无 SVG 矢量源，暂不做 .svg 图标。
 - `feat: SEO 基建——sitemap/robots.txt/canonical/OG 补全/JSON-LD/标题层级修复`——Lighthouse 实测 SEO 已 100，但站点 09-11 才建、尚未被搜索引擎收录且缺关键元数据：接 `@astrojs/sitemap`（构建出 /sitemap-index.xml，16 个页面，重定向页与 404 自动排除）；`public/robots.txt` 自建取代 CF 托管自动注入版（托管版 Allow 搜索但 Disallow 全部 AI 爬虫，产品站要被 AI 搜索引用故放开），带 Sitemap 行；Base.astro 补 canonical（构建期 /download 规范化为 /download/，与 Workers 307 一致）、og:url、绝对 og:image（原相对路径社交平台抓不到图）、og:image 尺寸/alt、twitter:card、og:locale，新增 `noindex` Prop（404 用，跳过 canonical）；首页加 SoftwareApplication JSON-LD（版本取 Releases 单源）争取搜索富摘要；修 Lighthouse 无障碍两项扣分：首页特性卡 h3 跳级改 h2、Docs.astro 侧栏分组标签 h3 改 div（原 h3 出现在正文 h1 前，9 个文档页全中）、pill/正列文字链接补下划线（link-in-text-block，.btn 按钮除外）。本地预览 Lighthouse：SEO / Best Practices / 无障碍 / Agentic 全 100。
 
 - `docs: README 双语化`——主仓 README.md 转英文主文档（GitHub/PyPI 国际默认）、中文迁 README.zh-CN.md 后，本仓同步双语布局；INSTALL.md 引用的 `../README.zh-CN.md` 白名单外链接补入 sync-docs.mjs EXTRA_LINKS 映射（否则站上渲染成站内相对路径 404）。
