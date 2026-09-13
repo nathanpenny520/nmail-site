@@ -1,8 +1,12 @@
 ---
-// 下载页：uvx 一行命令是绝对主角，其余方式一律略写，避免眼花缭乱。
+// 下载页：uvx 一行命令是绝对主角（深色大块 + 主色复制按钮），其余命令一律浅色单行组件，
+// 「其他方式」全宽单列行，避免眼花缭乱。命令永不折行（white-space: pre，窄屏横向滚动）。
 // 命令与主仓 docs/INSTALL.md 保持一致：PyPI 包名 nmail-app、命令名 nmail（必须 uvx --from），勿引入 pipx 等文档外写法。
 import Base from '../layouts/Base.astro'
 import { REPO_URL } from '../lib/releases'
+
+const BREW_CMD =
+  'brew tap nathanpenny520/nmail https://github.com/nathanpenny520/homebrew-nmail\nbrew install nmail'
 ---
 
 <Base title="下载" description="下载 Nmail：一行命令 uvx 全平台启动，或免安装单文件（Windows · macOS · Linux）。">
@@ -13,17 +17,17 @@ import { REPO_URL } from '../lib/releases'
 
   <section class="get">
     <h2>一行命令，全平台启动</h2>
-    <div class="onecmd">
+    <div class="cmdrow main">
       <pre><code>uvx --from nmail-app nmail</code></pre>
-      <button class="copy" data-copy="uvx --from nmail-app nmail">复制命令</button>
+      <button class="copy primary" data-copy="uvx --from nmail-app nmail">复制命令</button>
     </div>
     <p class="hint">没有 uv？官方安装器装一次即可（装完重开终端生效，uv 自动准备 Python 运行时）：</p>
-    <div class="inst">
+    <div class="cmdrow">
       <span class="os">macOS / Linux</span>
       <pre><code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
       <button class="copy" data-copy="curl -LsSf https://astral.sh/uv/install.sh | sh">复制</button>
     </div>
-    <div class="inst">
+    <div class="cmdrow">
       <span class="os">Windows PowerShell</span>
       <pre><code>irm https://astral.sh/uv/install.ps1 | iex</code></pre>
       <button class="copy" data-copy="irm https://astral.sh/uv/install.ps1 | iex">复制</button>
@@ -33,21 +37,29 @@ import { REPO_URL } from '../lib/releases'
 
   <section class="rest">
     <h2>其他方式</h2>
-    <div class="grid">
+    <div class="alt">
       <article class="card">
-        <h3>📦 免安装单文件</h3>
-        <p class="note">不想用命令行？Windows exe / macOS arm64 / Linux x64，下载即用，无需 Python</p>
+        <div class="info">
+          <h3>📦 免安装单文件</h3>
+          <p class="note">不想用命令行？Windows exe / macOS arm64 / Linux x64，下载即用，无需 Python</p>
+        </div>
         <a class="btn btn-primary" href={`${REPO_URL}/releases/latest`} target="_blank" rel="noopener">前往 GitHub Releases ↗</a>
       </article>
       <article class="card">
-        <h3>🍎 macOS · Homebrew</h3>
-        <p class="note">Apple Silicon；没有 Homebrew？到 <a href="https://brew.sh" target="_blank" rel="noopener">brew.sh</a> 安装</p>
-        <pre><code>brew tap nathanpenny520/nmail https://github.com/nathanpenny520/homebrew-nmail
-brew install nmail</code></pre>
+        <div class="info">
+          <h3>🍎 macOS · Homebrew</h3>
+          <p class="note">Apple Silicon；没有 Homebrew？到 <a href="https://brew.sh" target="_blank" rel="noopener">brew.sh</a> 安装</p>
+        </div>
+        <div class="cmdrow">
+          <pre><code>{BREW_CMD}</code></pre>
+          <button class="copy" data-copy={BREW_CMD}>复制</button>
+        </div>
       </article>
       <article class="card">
-        <h3>🪟 Windows · winget（审核中）</h3>
-        <p class="note">manifest 审核中，合入前暂不可用——期间用上方单文件或一行命令</p>
+        <div class="info">
+          <h3>🪟 Windows · winget（审核中）</h3>
+          <p class="note">manifest 审核中，合入前暂不可用——期间用上方单文件或一行命令</p>
+        </div>
       </article>
     </div>
   </section>
@@ -68,44 +80,59 @@ brew install nmail</code></pre>
   h1 { margin: 0; font-size: 32px; }
   .sub { color: var(--ink-soft); }
 
-  .get { margin: 30px 0 44px; }
-  .get h2 { font-size: 24px; margin: 0 0 16px; }
-  .onecmd { display: flex; gap: 14px; align-items: stretch; flex-wrap: wrap; }
-  .onecmd pre { flex: 1; min-width: 300px; margin: 0; display: flex; align-items: center; }
-  .onecmd pre code { font-size: 20px; }
+  /* 命令行组件：主命令深色放大，辅助命令浅色单行；命令永不折行，窄屏横向滚动 */
+  .cmdrow { display: flex; gap: 10px; align-items: stretch; margin: 10px 0 0; flex-wrap: wrap; }
+  .cmdrow pre {
+    flex: 1; min-width: 0; margin: 0; display: flex; align-items: center;
+    background: var(--bg-soft); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 9px 14px; overflow-x: auto;
+  }
+  .cmdrow pre code { font-size: 13.5px; white-space: pre; flex: none; }
+  .cmdrow.main { margin: 0; }
+  .cmdrow.main pre {
+    background: #0f172a; color: #e2e8f0; border-color: #0f172a;
+    border-radius: var(--radius); padding: 16px 22px; min-width: 260px;
+  }
+  .cmdrow.main pre code { font-size: 20px; }
+  .os { flex-shrink: 0; align-self: center; font-size: 13px; color: var(--ink-soft); width: 128px; }
+
   .copy {
-    border: 1px solid var(--line);
-    background: #fff;
-    border-radius: var(--radius);
-    padding: 0 26px;
-    font-size: 15px;
-    cursor: pointer;
-    color: var(--ink);
+    border: 1px solid var(--line); background: #fff; border-radius: 10px;
+    padding: 0 18px; font-size: 13.5px; cursor: pointer; color: var(--ink); white-space: nowrap;
   }
   .copy:hover { border-color: var(--accent); color: var(--accent); }
+  .copy.primary {
+    border-color: var(--accent); background: var(--accent); color: #fff;
+    border-radius: var(--radius); padding: 0 26px; font-size: 15px;
+  }
+  .copy.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; }
   .hint { color: var(--ink-soft); font-size: 13.5px; line-height: 1.8; margin: 14px 0 0; }
   .hint code { font-size: 12.5px; }
-  .inst { display: flex; gap: 10px; align-items: stretch; margin: 10px 0 0; flex-wrap: wrap; }
-  .inst .os { flex-shrink: 0; align-self: center; font-size: 13px; color: var(--ink-soft); width: 128px; }
-  .inst pre { flex: 1; min-width: 260px; margin: 0; display: flex; align-items: center; }
-  .inst pre code { font-size: 13px; }
-  .inst .copy { border-radius: 8px; padding: 0 14px; font-size: 13px; }
 
+  .get { margin: 30px 0 44px; }
+  .get h2 { font-size: 24px; margin: 0 0 16px; }
+
+  /* 其他方式：全宽单列行（标题/说明在左、动作在右），不再三卡并列 */
   .rest h2 { font-size: 21px; margin: 0 0 4px; }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 18px;
-    margin: 18px 0 0;
+  .alt { display: flex; flex-direction: column; gap: 14px; margin: 18px 0 0; }
+  .card {
+    border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 22px;
+    display: flex; align-items: center; gap: 8px 18px; flex-wrap: wrap;
   }
-  .card { border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; }
-  .card pre { white-space: pre-wrap; word-break: break-all; font-size: 13px; }
-  .card h3 { margin: 0 0 4px; font-size: 17px; }
-  .note { color: var(--ink-soft); font-size: 13.5px; margin: 4px 0 12px; }
-  .card .btn { margin-top: 4px; }
+  .card .info { flex: 1; min-width: 260px; }
+  .card h3 { margin: 0; font-size: 16.5px; }
+  .note { color: var(--ink-soft); font-size: 13.5px; margin: 3px 0 0; }
+  .card .btn { margin: 0; flex-shrink: 0; }
+  .card .cmdrow { flex: 1 1 100%; min-width: 0; } /* min-width:0：否则 flex 子项按内容最小宽度撑破卡片 */
+
+  @media (max-width: 720px) {
+    .cmdrow.main pre code { font-size: 16px; }
+    .os { flex-basis: 100%; }
+  }
 
   .req { margin: 44px 0 0; }
-  h2 { font-size: 21px; margin: 0 0 8px; }
+  .req h2 { font-size: 21px; margin: 0 0 8px; }
   ul { color: var(--ink-soft); margin: 8px 0 0; padding-left: 22px; }
   li { margin: 4px 0; }
 </style>
