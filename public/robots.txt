@@ -1,6 +1,8 @@
-# 自建 robots.txt 取代 Cloudflare 托管自动版（托管版 Allow 搜索但 Disallow 全部
-# AI 爬虫——ClaudeBot/GPTBot 等；产品站希望被 AI 搜索与助手引用，故放开）。
-# 站点提供了 robots.txt 后 CF 即不再注入托管版。
+# 自建 robots.txt。
+# ⚠ 已知限制：whizzzest.com 区域开启了 Cloudflare「AI 审计 → 托管 robots.txt」，
+# 它在边缘拦截全部子域名的 /robots.txt（本文件线上实际不生效，2026-09-13 验证）。
+# 要放开 AI 爬虫需到 Cloudflare Dashboard → whizzzest.com → AI 审计里编辑托管配置；
+# 关闭托管后本文件才会生效（含 Sitemap 行）。
 User-agent: *
 Allow: /
 
