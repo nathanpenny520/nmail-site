@@ -54,3 +54,4 @@ astro build（npm run build）
 - **零客户端 JS**（唯一例外：download.astro 的复制按钮）；交互一律 CSS 完成（如移动端导航横滑）。
 - 零框架 CSS：`src/styles/global.css` 定义变量（`--ink/--line/--accent/--radius/--maxw` 等），组件样式内联在各 `.astro` 的 `<style>` 里；响应式目前仅 Base.astro 一处 `@media (max-width: 720px)`。
 - 中文优先；页面 title/description 走 Base.astro 的 Props。
+- SEO：Base.astro 输出 canonical / og:url / 绝对 og:image / twitter:card（`noindex` Prop 供 404 用，跳过 canonical 改输出 noindex）；首页带 SoftwareApplication JSON-LD；`@astrojs/sitemap` 构建期生成 `/sitemap-index.xml`，`public/robots.txt` 指向它。robots.txt 必须自建——Cloudflare 只在站点没有 robots.txt 时注入托管版，托管版会 Disallow 全部 AI 爬虫。

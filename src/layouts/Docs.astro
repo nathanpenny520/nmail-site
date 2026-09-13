@@ -18,7 +18,8 @@ const description = meta?.desc ?? 'Nmail 文档'
       <a class="home" href="/docs/">📚 文档首页</a>
       {DOC_GROUPS.map((group) => (
         <div class="group">
-          <h3>{group}</h3>
+          {/* 分组标签用 div 不用 h3：侧栏出现在正文 h1 之前，标题跳级会被 Lighthouse/无障碍扣分 */}
+          <div class="group-name">{group}</div>
           {DOCS.filter((d) => d.group === group).map((d) => (
             <a class:list={[{ active: d.slug === slug }]} href={`/docs/${d.slug}/`}>{d.title}</a>
           ))}
@@ -46,7 +47,7 @@ const description = meta?.desc ?? 'Nmail 文档'
     font-size: 15px;
   }
   .group { margin-bottom: 18px; }
-  h3 {
+  .group-name {
     margin: 0 0 6px;
     font-size: 12.5px;
     color: var(--ink-soft);
@@ -68,7 +69,7 @@ const description = meta?.desc ?? 'Nmail 文档'
     .docs { grid-template-columns: 1fr; }
     aside { position: static; display: flex; flex-wrap: wrap; gap: 4px 16px; }
     .group { display: contents; }
-    .group h3 { display: none; }
+    .group-name { display: none; }
   }
 
   /* 正文排版（渲染主仓同步来的 Markdown） */

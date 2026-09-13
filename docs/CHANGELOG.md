@@ -5,6 +5,8 @@
 
 ## 2026-09-13
 
+- `feat: SEO 基建——sitemap/robots.txt/canonical/OG 补全/JSON-LD/标题层级修复`——Lighthouse 实测 SEO 已 100，但站点 09-11 才建、尚未被搜索引擎收录且缺关键元数据：接 `@astrojs/sitemap`（构建出 /sitemap-index.xml，16 个页面，重定向页与 404 自动排除）；`public/robots.txt` 自建取代 CF 托管自动注入版（托管版 Allow 搜索但 Disallow 全部 AI 爬虫，产品站要被 AI 搜索引用故放开），带 Sitemap 行；Base.astro 补 canonical（构建期 /download 规范化为 /download/，与 Workers 307 一致）、og:url、绝对 og:image（原相对路径社交平台抓不到图）、og:image 尺寸/alt、twitter:card、og:locale，新增 `noindex` Prop（404 用，跳过 canonical）；首页加 SoftwareApplication JSON-LD（版本取 Releases 单源）争取搜索富摘要；修 Lighthouse 无障碍两项扣分：首页特性卡 h3 跳级改 h2、Docs.astro 侧栏分组标签 h3 改 div（原 h3 出现在正文 h1 前，9 个文档页全中）、pill/正列文字链接补下划线（link-in-text-block，.btn 按钮除外）。本地预览 Lighthouse：SEO / Best Practices / 无障碍 / Agentic 全 100。
+
 - `docs: README 双语化`——主仓 README.md 转英文主文档（GitHub/PyPI 国际默认）、中文迁 README.zh-CN.md 后，本仓同步双语布局；INSTALL.md 引用的 `../README.zh-CN.md` 白名单外链接补入 sync-docs.mjs EXTRA_LINKS 映射（否则站上渲染成站内相对路径 404）。
 
 - `fix: 版本口径对齐——功能页/项目卡改标 v0.3.0`——用户核对发现功能页副标题写「v0.4 主线能力」而站上最新版本是 v0.3.0；逐项核对功能页 12 项能力全部已在 v0.3.0 发布（v0.4 系改版计划代号，无 v0.4.0 发布）：功能页注释与副标题改「v0.3.0 已上线」，/projects.json 的 Nmail 描述同步改 v0.3.0（个人站下次构建带上），Releases 拉取失败兜底版本 0.2.0→0.3.0。主仓公开文档（OAuth2 指南 / 对外 API 指南 / PRODUCT_PLAN）同口径修正，/docs 镜像随构建自动跟上。

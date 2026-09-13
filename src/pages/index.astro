@@ -7,6 +7,22 @@ const release = await fetchLatestRelease()
 const version = versionOf(release?.tag_name) || FALLBACK_VERSION
 const releaseUrl = release?.html_url ?? 'https://github.com/nathanpenny520/Nmail/releases'
 
+// SoftwareApplication 结构化数据：争取搜索结果富摘要（应用名/平台/免费/开源）
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Nmail',
+  url: 'https://nmail.whizzzest.com/',
+  image: 'https://nmail.whizzzest.com/icon-512.png',
+  description: 'Nmail —— AI 驱动的本地聚合邮箱客户端：AI 分类整理、草稿待审、每日摘要、多账号聚合，数据全程留在本机。',
+  applicationCategory: 'CommunicationApplication',
+  operatingSystem: 'Windows, macOS, Linux',
+  softwareVersion: version,
+  author: { '@type': 'Organization', name: 'Nmail', url: 'https://nmail.whizzzest.com/' },
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  license: 'https://opensource.org/licenses/MIT',
+}
+
 const features = [
   {
     icon: '🤖', title: 'AI 分类与整理',
@@ -36,6 +52,7 @@ const features = [
 ---
 
 <Base title="AI 驱动的本地邮箱管家">
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
   <section class="hero">
     <span class="pill"><span class="dot"></span> 最新版本 v{version} · <a href={releaseUrl} target="_blank" rel="noopener">查看发布</a></span>
     <h1>把邮箱交给 AI 总管家<br /><span class="grad">数据一步也不离开你的电脑</span></h1>
@@ -53,7 +70,8 @@ const features = [
     {features.map((f) => (
       <article class="card">
         <div class="icon">{f.icon}</div>
-        <h3>{f.title}</h3>
+        {/* h2 而非 h3：卡片紧跟 h1，标题跳级会被 Lighthouse/无障碍扣分 */}
+        <h2>{f.title}</h2>
         <p>{f.desc}</p>
       </article>
     ))}
@@ -102,8 +120,10 @@ const features = [
     background: #fff;
   }
   .card .icon { font-size: 26px; }
-  .card h3 { margin: 10px 0 6px; font-size: 17px; }
+  .card h2 { margin: 10px 0 6px; font-size: 17px; }
   .card p { margin: 0; color: var(--ink-soft); font-size: 14.5px; }
+  /* 正文文字里的链接不能只靠颜色区分（无障碍 link-in-text-block），补下划线（.btn 按钮除外） */
+  .pill a, .band li a { text-decoration: underline; }
 
   .band {
     display: flex;

@@ -6,11 +6,16 @@ import { fetchLatestRelease, versionOf, REPO_URL } from '../../src/lib/releases'
 interface Props {
   title: string
   description?: string
+  noindex?: boolean // 404 等不该进索引的页：跳过 canonical/og:url，改输出 noindex
 }
-const { title, description = 'Nmail —— AI 驱动的本地聚合邮箱客户端：AI 分类整理、草稿待审、每日摘要、多账号聚合，数据全程留在本机。' } = Astro.props
+const { title, description = 'Nmail —— AI 驱动的本地聚合邮箱客户端：AI 分类整理、草稿待审、每日摘要、多账号聚合，数据全程留在本机。', noindex = false } = Astro.props
 const release = await fetchLatestRelease()
 const version = versionOf(release?.tag_name)
 const path = Astro.url.pathname
+// SEO：canonical/og:image 必须是绝对 URL；构建期 /download 规范化为 /download/（与 Workers 的 307 一致）
+const site = Astro.site ?? new URL('https://nmail.whizzzest.com')
+const canonical = new URL(path.endsWith('/') ? path : `${path}/`, site).href
+const ogImage = new URL('/icon-512.png', site).href
 const nav = [
   { href: '/', label: '首页' },
   { href: '/download/', label: '下载' },
@@ -28,11 +33,18 @@ const nav = [
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title} · Nmail</title>
     <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
     <meta property="og:title" content={`${title} · Nmail`} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Nmail" />
-    <meta property="og:image" content="/icon-512.png" />
+    <meta property="og:locale" content="zh_CN" />
+    {!noindex && <meta property="og:url" content={canonical} />}
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:image:alt" content="Nmail 图标" />
+    <meta name="twitter:card" content="summary" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="apple-touch-icon" href="/icon-512.png" />
     <meta name="theme-color" content="#4f46e5" />

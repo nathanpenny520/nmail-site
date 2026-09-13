@@ -1,0 +1,7 @@
+# 自建 robots.txt 取代 Cloudflare 托管自动版（托管版 Allow 搜索但 Disallow 全部
+# AI 爬虫——ClaudeBot/GPTBot 等；产品站希望被 AI 搜索与助手引用，故放开）。
+# 站点提供了 robots.txt 后 CF 即不再注入托管版。
+User-agent: *
+Allow: /
+
+Sitemap: https://nmail.whizzzest.com/sitemap-index.xml
