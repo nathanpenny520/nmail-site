@@ -25,6 +25,7 @@ const MAP = [
   { file: 'FAQ.md', slug: 'faq' },
   { file: '隐私与安全.md', slug: 'privacy' },
   { file: 'OAuth2 使用指南.md', slug: 'oauth' },
+  { file: 'Agent接入指南.md', slug: 'agent' },
   { file: '对外API使用指南.md', slug: 'api' },
   { file: 'CHANGELOG.md', slug: 'changelog' },
   { file: 'ARCHITECTURE.md', slug: 'architecture' },
