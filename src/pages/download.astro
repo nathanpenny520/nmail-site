@@ -51,11 +51,11 @@ const DL_ASSETS = [
       <article class="card">
         <div class="info">
           <h3>📦 免安装单文件</h3>
-          <p class="note">不想用命令行？下载即用，无需 Python；更新时下载新版覆盖即可。仅提供最新版，历史版本到 <a href={`${REPO_URL}/releases`} target="_blank" rel="noopener">GitHub Releases</a></p>
+          <p class="note">不想用命令行？Windows 双击即用；macOS/Linux 首次运行需一条终端授权命令（<a href="/docs/install/">见安装文档</a>）。无需 Python；更新时下载新版覆盖。仅提供最新版，历史版本到 <a href={`${REPO_URL}/releases`} target="_blank" rel="noopener">GitHub Releases</a></p>
         </div>
         <div class="dlrow">
           {DL_ASSETS.map((a) => (
-            <a class="dl" href={`/dl/${a.name}`}>
+            <a class="dl" href={`/dl/${a.name}`} title={a.name === 'nmail-macos-arm64' ? 'macOS 首次运行需先授权：终端跑 chmod +x（详见安装文档）' : undefined}>
               <span class="dl-icon" aria-hidden="true">⬇</span>
               {a.label}
               {a.size != null && <span class="dl-size">{(a.size / 1048576).toFixed(1)} MB</span>}

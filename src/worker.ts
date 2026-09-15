@@ -3,7 +3,12 @@
 // R2 未命中（首次部署前/同步失败）→ 302 兜底 GitHub 最新版直链，页面永不出现死链。
 // 其余请求不会进本 Worker：wrangler.toml run_worker_first 仅拦 /dl/*，静态资产照走免费资产管线。
 interface R2Like {
-  get(key: string): Promise<{ body: ReadableStream; size: number; httpEtag: string } | null>
+  get(key: string, opts?: { range?: Headers }): Promise<{
+    body: ReadableStream
+    size: number
+    httpEtag: string
+    range?: { offset?: number; length?: number }
+  } | null>
 }
 interface Env {
   DL_BUCKET: R2Like
@@ -19,16 +24,26 @@ export default {
     const url = new URL(request.url)
     const name = url.pathname.slice('/dl/'.length)
     if (url.pathname.startsWith('/dl/') && ASSET_NAMES.has(name)) {
-      const obj = await env.DL_BUCKET.get(name)
+      // Range 支持：断点续传/下载管理器必需；R2 原生解析 Range 头，不支持的形态（多段 Range）回退全量
+      let obj = await env.DL_BUCKET.get(name, { range: request.headers }).catch(() => null)
+      if (!obj) obj = await env.DL_BUCKET.get(name)
       if (obj) {
-        return new Response(obj.body, {
-          headers: {
-            'Content-Type': 'application/octet-stream',
-            'Content-Length': String(obj.size),
-            'Content-Disposition': `attachment; filename="${name}"`,
-            ETag: obj.httpEtag,
-          },
+        const headers = new Headers({
+          'Content-Type': 'application/octet-stream',
+          'Content-Disposition': `attachment; filename="${name}"`,
+          ETag: obj.httpEtag,
+          'Accept-Ranges': 'bytes',
         })
+        const r = obj.range
+        if (request.headers.has('range') && r && (r.offset != null || r.length != null)) {
+          const offset = r.offset ?? obj.size - (r.length ?? 0)
+          const end = r.length != null ? offset + r.length - 1 : obj.size - 1
+          headers.set('Content-Range', `bytes ${offset}-${end}/${obj.size}`)
+          headers.set('Content-Length', String(end - offset + 1))
+          return new Response(obj.body, { status: 206, headers })
+        }
+        headers.set('Content-Length', String(obj.size))
+        return new Response(obj.body, { status: 200, headers })
       }
       return Response.redirect(GITHUB_LATEST + name, 302)
     }
