@@ -12,7 +12,7 @@ import { join } from 'node:path'
 
 const REPO = 'nathanpenny520/Nmail'
 const BUCKET = 'nmail-dl'
-const FILES = ['nmail-windows-x64.exe', 'nmail-macos-arm64', 'nmail-linux-x64']
+const FILES = ['nmail-windows-x64.exe', 'nmail-macos-arm64', 'nmail-linux-x64', 'nmail-macos-arm64.app.zip']
 
 const headers = { 'User-Agent': 'nmail-site', Accept: 'application/vnd.github+json' }
 if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`

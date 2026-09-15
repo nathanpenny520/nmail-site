@@ -5,6 +5,7 @@
 
 ## 2026-09-15
 
+- `fix: 下载页 brew 命令改 tap 全名 + trust，新增 macOS .app 压缩包推荐卡`——两处用户反馈：①下载页硬编码的 brew 命令漏改（裸 `brew install nmail` 会装到 homebrew/core 同名无关软件，Homebrew 7 还须先 `brew trust`）——BREW_CMD 改三行全名命令，与主仓 INSTALL.md 对齐；教训：官网硬编码文案（download.astro 等）必须纳入主仓 CLAUDE.md 规范 #11 的四处同步审查，勿只 grep 采样；②v0.4.2 起 CI 随版构建 `nmail-macos-arm64.app.zip`，下载页新增「macOS · App 压缩包（推荐）」卡置顶（解压拖进「应用程序」即用，含首次右键打开提示），`worker.ts` ASSET_NAMES 与 `sync-r2.mjs` FILES 白名单同步纳入 .zip（R2 镜像加速，未命中 302 GitHub 兜底）。
 - `fix: /dl 支持 Range 断点续传 + 下载按钮突出化 + macOS 提示`——用户实测暴露三件事：①`/dl` 原实现不支持 Range，大文件断点续传（浏览器中断续传/下载管理器）会失败——worker 改用 R2 原生 Range 解析返回 206（多段 Range 等不支持形态回退全量），本地模拟+线上 206 双验证（ac429fa 下载按钮同步改主色实心+⬇ 图标提升可点性）；②macOS 裸二进制浏览器下载后无可执行权限，用户双击被编辑器打开「乱码」——单文件卡说明改「Windows 双击即用；macOS/Linux 首次运行需一条终端授权命令（见安装文档）」，macOS 按钮加悬停提示；③用户另报 Windows exe 双击闪退——版本读取打包兜底已核查无恙，待用户提供 cmd 运行报错定位。
 
 - `feat: 安装包国内加速下载——R2 镜像 + /dl 路由`——国内用户直连 GitHub 不稳，且单文件最大 34.5MB 超 Workers 静态资产 25MiB/文件上限（打包进站不可行）：新建 R2 桶 `nmail-dl`，`scripts/sync-r2.mjs` 挂入 deploy.yml（continue-on-error）把最新 release 三平台资产覆盖式镜像进桶（键=资产文件名，标记对象 `_synced-tag` 去重，重复部署跳过）→ 桶内永远只保留最新版，历史版本引导去 GitHub Releases；新增 `src/worker.ts` 只拦 `/dl/*`（`run_worker_first`，其余请求照走免费静态资产管线）：R2 直读 + `Content-Disposition: attachment`，未命中 302 兜底 GitHub 最新直链，页面永不出现死链；下载页单文件卡改三平台直链按钮（构建期带体积，`releases.ts` 补 assets 字段），GitHub Releases 保留为历史版本入口。CI secrets 新增 `CLOUDFLARE_R2_API_TOKEN`（仅 R2 编辑权限，与 deploy token 分离做最小授权）。
