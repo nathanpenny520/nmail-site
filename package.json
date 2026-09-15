@@ -9,7 +9,8 @@
     "prebuild": "node scripts/sync-docs.mjs",
     "build": "astro build",
     "sync-docs": "node scripts/sync-docs.mjs",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "sync:r2": "node scripts/sync-r2.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

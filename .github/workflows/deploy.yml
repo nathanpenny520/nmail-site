@@ -27,6 +27,14 @@ jobs:
       - run: npm run build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # R2 镜像对账同步：桶 nmail-dl 覆盖式补齐最新 release 三平台安装包（只保留最新版，
+      # 标记对象 _synced-tag 相同则跳过）。失败不阻塞出站——worker 对 R2 未命中 302 兜底 GitHub。
+      - run: node scripts/sync-r2.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_R2_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        continue-on-error: true
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

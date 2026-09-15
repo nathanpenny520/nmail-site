@@ -11,6 +11,7 @@ npm run dev        # http://localhost:4321（构建期拉取同样会跑，本�
 npm run build      # prebuild 同步主仓文档 + astro build —— 任何改动后必须执行验证
 npm run preview    # 预览 dist/
 npm run sync-docs  # 单独跑文档同步（调试 sync-docs.mjs 用）
+npm run sync:r2    # 手动同步最新 release 资产进 R2（CI 部署自动跑；本地走 wrangler login）
 npx wrangler deploy   # 发版（先 build；需 wrangler login，域名按 wrangler.toml 自动生效）
 ```
 
@@ -26,7 +27,7 @@ npx wrangler deploy   # 发版（先 build；需 wrangler login，域名按 wran
 
 ## 架构速览（详见 docs/ARCHITECTURE.md）
 
-- 全部数据在**构建期**取得，运行时纯静态：`lib/releases.ts`（GitHub Releases 单源+回退）· `scripts/sync-docs.mjs`（主仓文档白名单同步）
+- 页面数据全部在**构建期**取得：`lib/releases.ts`（GitHub Releases 单源+回退）· `scripts/sync-docs.mjs`（主仓文档白名单同步）。**运行时唯一动态路径**：`/dl/*` Worker（`src/worker.ts`：R2 桶 `nmail-dl` 直读最新版安装包，未命中 302 GitHub 兜底；`scripts/sync-r2.mjs` 部署期覆盖式对账，桶内只留最新版）
 - 页面在 `src/pages/`；全站骨架 `src/layouts/Base.astro`（导航/页脚/720px 断点）；/docs 区布局 `Docs.astro` + `config/docs.ts`
 - 样式零框架：`styles/global.css` 变量 + 组件内联 `<style>`；**零客户端 JS**（唯一例外 download.astro 复制按钮）
 

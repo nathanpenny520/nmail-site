@@ -10,6 +10,7 @@ export interface Release {
   published_at: string | null
   body: string | null
   html_url: string
+  assets?: { name: string; size: number }[]
 }
 
 async function getJson(url: string): Promise<unknown> {

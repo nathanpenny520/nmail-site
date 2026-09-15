@@ -3,10 +3,18 @@
 # wrangler deploy 全自动建 DNS 与证书——Pages 的域名只能在 Dashboard 点）。
 name = "nmail-site"
 compatibility_date = "2026-09-01"
+main = "src/worker.ts" # Worker 入口：仅 /dl/* 进代码（见 run_worker_first），其余纯静态资产
 workers_dev = true # 保留 nmail-site.<子域>.workers.dev 作为自定义域之外的兜底入口
+
+# R2 镜像桶：最新版三平台安装包（键=资产文件名，scripts/sync-r2.mjs 覆盖式同步=只保留最新版）
+[[r2_buckets]]
+binding = "DL_BUCKET"
+bucket_name = "nmail-dl"
 
 [assets]
 directory = "./dist"
+binding = "ASSETS"                     # Worker 兜底回静态资产用
+run_worker_first = ["/dl/*"]           # 仅下载路由进 Worker；其余照走免费静态管线、不计 Worker 请求
 not_found_handling = "404-page"        # 未命中路径返回 /404.html（404 状态码）
 html_handling = "auto-trailing-slash"  # /download 与 /download/ 都命中同名目录 index.html
 

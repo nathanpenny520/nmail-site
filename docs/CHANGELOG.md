@@ -5,6 +5,7 @@
 
 ## 2026-09-15
 
+- `feat: 安装包国内加速下载——R2 镜像 + /dl 路由`——国内用户直连 GitHub 不稳，且单文件最大 34.5MB 超 Workers 静态资产 25MiB/文件上限（打包进站不可行）：新建 R2 桶 `nmail-dl`，`scripts/sync-r2.mjs` 挂入 deploy.yml（continue-on-error）把最新 release 三平台资产覆盖式镜像进桶（键=资产文件名，标记对象 `_synced-tag` 去重，重复部署跳过）→ 桶内永远只保留最新版，历史版本引导去 GitHub Releases；新增 `src/worker.ts` 只拦 `/dl/*`（`run_worker_first`，其余请求照走免费静态资产管线）：R2 直读 + `Content-Disposition: attachment`，未命中 302 兜底 GitHub 最新直链，页面永不出现死链；下载页单文件卡改三平台直链按钮（构建期带体积，`releases.ts` 补 assets 字段），GitHub Releases 保留为历史版本入口。CI secrets 新增 `CLOUDFLARE_R2_API_TOKEN`（仅 R2 编辑权限，与 deploy token 分离做最小授权）。
 - `feat: 下载页讲清「每次打开都运行同一条命令」`——用户反馈第二次使用该做什么没讲透：副标题点明 uvx 命令即启动命令（不是一次性安装包）；主命令区按时间线补三行小字——**下次打开**（重跑同一条命令，包已缓存秒级启动）、**更新版本**（应用内每日自动检查+通知中心提醒；uvx 升级 `uvx --refresh --from nmail-app nmail`，不刷新缓存会沿用首跑版本）、**常驻安装**（uv tool install 后任意目录敲 nmail，升级 uv tool upgrade）；单文件卡补「更新=下载新版覆盖」。uvx 升级命令为主仓 INSTALL.md 同步新增的官方口径（主仓提交 5cd023e），uv 缓存语义经 uv 官方文档核实。
 - `feat: v0.4.0 发布对齐`——主仓 v0.4.0 已发布（Agent 化收官），官网全量跟上：新增动态帖 `posts/v0.4.0.md`（跨会话记忆/AI 晨报/触顶小结/澄清中断/技能包/CLI 总管家通道/安全加固 + 升级方式）；功能页 12→15 卡（AI 组补跨会话记忆、拿不准先问你、内置工作流技能；自动化组补 AI 晨报卡，对外 API 卡并入 CLI 通道），版本口径 v0.3.0→v0.4.0；首页特性卡文案更新（总管家卡补记忆与澄清、摘要卡并入晨报）；项目卡 `/projects.json` 描述更新至 v0.4.0（个人站下次构建带上）；Releases 拉取失败兜底版本 0.3.0→0.4.0。/docs 镜像（使用指南/FAQ/Agent 接入指南等）随构建从主仓自动同步。
 

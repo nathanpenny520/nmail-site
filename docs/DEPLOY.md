@@ -10,6 +10,8 @@ Pages 只能 Dashboard 手点）。
 | 配置 | 值 | 说明 |
 |---|---|---|
 | `name` | `nmail-site` | Worker 名 |
+| `main` | `src/worker.ts` | Worker 入口：仅 `/dl/*` 进代码（`run_worker_first`），其余纯静态资产 |
+| `[[r2_buckets]]` | `nmail-dl`（binding `DL_BUCKET`） | 最新版三平台安装包镜像（键=资产文件名，sync-r2.mjs 覆盖式同步） |
 | `[assets].directory` | `./dist` | astro build 产物 |
 | `not_found_handling` | `404-page` | 未命中返回 `/404.html`（404 状态码） |
 | `html_handling` | `auto-trailing-slash` | `/download` 与 `/download/` 都命中 |
@@ -20,12 +22,13 @@ Pages 只能 Dashboard 手点）。
 
 ```bash
 npm run build          # prebuild 同步主仓文档 + 构建期拉 Releases
-npx wrangler deploy    # 静态资产 + 域名按 wrangler.toml 自动生效
+npm run sync:r2        # 可选：手动同步最新 release 资产进 R2（CI 部署时会自动跑）
+npx wrangler deploy    # 静态资产 + /dl Worker + 域名按 wrangler.toml 自动生效
 ```
 
 ## CI 自动部署（三个触发器）
 
-`.github/workflows/deploy.yml`：Actions checkout → `npm ci` → `npm run build` → `wrangler-action@v3 deploy`。
+`.github/workflows/deploy.yml`：Actions checkout → `npm ci` → `npm run build` → `sync-r2`（R2 镜像对账，continue-on-error）→ `wrangler-action@v3 deploy`。
 
 | 触发器 | 覆盖什么 |
 |---|---|
@@ -40,10 +43,12 @@ npx wrangler deploy    # 静态资产 + 域名按 wrangler.toml 自动生效
 - `CLOUDFLARE_API_TOKEN`：CF dashboard → My Profile → API Tokens → Create Token，
   用 **Edit Cloudflare Workers** 模板并追加 **Zone · DNS · Edit** 权限（自定义域名自动建 DNS/证书需要）
 - `CLOUDFLARE_ACCOUNT_ID`：见 wrangler.toml 同账户，`npx wrangler whoami` 可查
+- `CLOUDFLARE_R2_API_TOKEN`：**仅 R2 编辑权限**的独立 token（`sync-r2.mjs` 用，与 deploy token 分离做最小授权）
 
 ```bash
 gh secret set CLOUDFLARE_API_TOKEN -R nathanpenny520/nmail-site      # 粘贴 token
 gh secret set CLOUDFLARE_ACCOUNT_ID -R nathanpenny520/nmail-site
+gh secret set CLOUDFLARE_R2_API_TOKEN -R nathanpenny520/nmail-site   # R2 镜像同步用
 ```
 
 构建期拉 GitHub Releases 用 **`GITHUB_TOKEN`**——Actions 自动注入，无需配置；
@@ -65,3 +70,4 @@ wrangler 在 devDependencies 里锁版本——wrangler-action 的 npx 在无 TT
 - **文档区缺篇**：sync-docs 来源全败时该篇跳过（warn 日志）；一篇都拉不到才构建失败。
   检查 `NMAIL_DOCS_DIR` / 仓库布局（本站应与主仓并列：`Nmail/nmail-site` + `Nmail/Nmail`）。
 - **域名证书/DNS 异常**：custom_domain 由 `wrangler deploy` 全自动维护，重跑一次 deploy 即可。
+- **`/dl` 变慢或仍跳 GitHub**：R2 未同步（sync-r2 失败或尚未跑）——worker 对未命中自动 302 GitHub 属预期降级，不算故障；查 Actions 同步步日志，或本机 `npm run sync:r2` 手动补（本地走 wrangler login 的 OAuth）。
