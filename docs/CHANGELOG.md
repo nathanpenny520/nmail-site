@@ -3,6 +3,10 @@
 只记本仓库（官网）变更；产品变更看主仓 `Nmail/Nmail/docs/CHANGELOG.md`。
 惯例：最新在上；条目 = `日期 类型: 一句话`，重要改动附动机。
 
+## 2026-09-15
+
+- `feat: v0.4.0 发布对齐`——主仓 v0.4.0 已发布（Agent 化收官），官网全量跟上：新增动态帖 `posts/v0.4.0.md`（跨会话记忆/AI 晨报/触顶小结/澄清中断/技能包/CLI 总管家通道/安全加固 + 升级方式）；功能页 12→15 卡（AI 组补跨会话记忆、拿不准先问你、内置工作流技能；自动化组补 AI 晨报卡，对外 API 卡并入 CLI 通道），版本口径 v0.3.0→v0.4.0；首页特性卡文案更新（总管家卡补记忆与澄清、摘要卡并入晨报）；项目卡 `/projects.json` 描述更新至 v0.4.0（个人站下次构建带上）；Releases 拉取失败兜底版本 0.3.0→0.4.0。/docs 镜像（使用指南/FAQ/Agent 接入指南等）随构建从主仓自动同步。
+
 ## 2026-09-13
 
 - `fix: robots.txt 正式生效`——用户在 Cloudflare Dashboard 关闭 whizzzest.com 区域的「AI 审计 → 托管 robots.txt」，线上验证自建版接管（`Allow: /` + Sitemap 行），主站回退到自己的源站 robots.txt（5 个 sitemap 完好、无 AI 爬虫 Disallow），两站 AI 爬虫全部放开；robots.txt 注释同步更新。
