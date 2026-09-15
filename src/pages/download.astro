@@ -56,6 +56,7 @@ const DL_ASSETS = [
         <div class="dlrow">
           {DL_ASSETS.map((a) => (
             <a class="dl" href={`/dl/${a.name}`}>
+              <span class="dl-icon" aria-hidden="true">⬇</span>
               {a.label}
               {a.size != null && <span class="dl-size">{(a.size / 1048576).toFixed(1)} MB</span>}
             </a>
@@ -143,15 +144,17 @@ const DL_ASSETS = [
   .card .btn { margin: 0; flex-shrink: 0; }
   .card .cmdrow { flex: 1 1 100%; min-width: 0; } /* min-width:0：否则 flex 子项按内容最小宽度撑破卡片 */
 
-  /* 单文件直链按钮（/dl/*，R2 加速）：次级观感，不抢主命令风头 */
-  .dlrow { display: flex; gap: 8px; flex-wrap: wrap; flex-shrink: 0; }
+  /* 单文件直链按钮（/dl/*，R2 加速）：主色实心 + 下载图标，一眼可点 */
+  .dlrow { display: flex; gap: 10px; flex-wrap: wrap; flex-shrink: 0; }
   .dl {
-    display: inline-flex; align-items: baseline; gap: 6px;
-    border: 1px solid var(--line); background: #fff; color: var(--ink);
-    border-radius: 10px; padding: 8px 14px; font-size: 13.5px; text-decoration: none; white-space: nowrap;
+    display: inline-flex; align-items: baseline; gap: 7px;
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+    border-radius: 10px; padding: 9px 16px; font-size: 14px; font-weight: 500;
+    text-decoration: none; white-space: nowrap;
   }
-  .dl:hover { border-color: var(--accent); color: var(--accent); }
-  .dl-size { font-size: 12px; color: var(--ink-soft); }
+  .dl:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; }
+  .dl-icon { font-size: 13px; }
+  .dl-size { font-size: 12px; color: rgba(255, 255, 255, 0.72); }
 
   @media (max-width: 720px) {
     .cmdrow.main pre code { font-size: 16px; }
