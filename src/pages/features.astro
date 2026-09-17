@@ -1,5 +1,5 @@
 ---
-// 功能页（REDESIGN_PLAN §10.1）：按用户视角介绍 v0.4.0 已发布的主线能力（随版本迭代补充）。
+// 功能页（REDESIGN_PLAN §10.1）：按用户视角介绍 v0.4.x 已发布的主线能力（随版本迭代补充）。
 import Base from '../layouts/Base.astro'
 
 const groups = [
@@ -31,10 +31,10 @@ const groups = [
     ],
   },
   {
-    title: '与自动化',
+    title: '自动化与集成',
     items: [
-      ['每日摘要', '固定时间一份综述：收件概况、重要邮件、待回复清单，AI 综述一段话掌握全天。'],
-      ['AI 晨报', '总管家每晨定时巡一遍邮箱写份「今日建议」：昨夜来了什么、今天先处理什么；通知中心展开即读全文。'],
+      ['每日摘要', '固定时间一份综述：收件概况、重要邮件、待回复清单，统计图表本地生成零 AI 成本。'],
+      ['AI 摘要', '总管家到点巡箱总结并拟好回复草稿（只进待审，绝不自动发送）；摘要页可随时重新生成，通知中心展开即读全文。'],
       ['对外 API 与 CLI', '本机 /api/ext/v1：API Key + scope 分级，iOS 快捷指令、Raycast、n8n 随便接；nmail-cli agent ask 一条命令委托内置总管家。'],
       ['本地隐私', '服务只监听 127.0.0.1，数据与密钥全在本机；不注册账号、不连云端、MIT 开源。'],
     ],
@@ -42,11 +42,27 @@ const groups = [
 ]
 ---
 
-<Base title="功能" description="Nmail 功能一览：资源管理器式邮箱管理、AI 总管家（审批/自动双模式、跨会话记忆、工作流技能）、AI 晨报、统一草稿、通讯录联想、对外 API 与 CLI、本地隐私。">
+<Base title="功能" description="Nmail 功能一览：资源管理器式邮箱管理、AI 总管家（审批/自动双模式、跨会话记忆、工作流技能）、每日摘要与 AI 摘要、统一草稿、通讯录联想、对外 API 与 CLI、本地隐私。">
   <section class="head">
     <h1>功能一览</h1>
-    <p class="sub">v0.4.0 已上线的主线能力；随版本迭代持续补充。</p>
+    <p class="sub">v0.4.x 已上线的主线能力；随版本迭代持续补充。</p>
   </section>
+
+  <section class="shots">
+    <figure>
+      <img src="/shots/nmail-demo-inbox.png" alt="多账号聚合收件箱：AI 分类标签、文件夹树、三栏布局" width="340" loading="lazy" />
+      <figcaption>聚合收件箱</figcaption>
+    </figure>
+    <figure>
+      <img src="/shots/nmail-demo-assistant.png" alt="AI 总管家对话页：一句话任务，多步执行，写操作先审批" width="340" loading="lazy" />
+      <figcaption>AI 总管家</figcaption>
+    </figure>
+    <figure>
+      <img src="/shots/nmail-demo-digest.png" alt="每日摘要页：统计卡片、近 7 天图表、分类分布、待回复清单" width="340" loading="lazy" />
+      <figcaption>每日摘要</figcaption>
+    </figure>
+  </section>
+
   {groups.map((g) => (
     <section class="group">
       <h2>{g.title}</h2>
@@ -62,7 +78,7 @@ const groups = [
   ))}
   <section class="cta-band">
     <a class="btn btn-primary" href="/download/">立即体验</a>
-    <a class="btn btn-ghost" href="https://github.com/nathanpenny520/Nmail/tree/main/docs" target="_blank" rel="noopener">阅读文档 ↗</a>
+    <a class="btn btn-ghost" href="/docs/">阅读文档</a>
   </section>
 </Base>
 
@@ -70,6 +86,19 @@ const groups = [
   .head { padding: 52px 0 4px; }
   h1 { margin: 0; font-size: 32px; }
   .sub { color: var(--ink-soft); }
+
+  /* 界面速览：三图一行，窄屏堆叠 */
+  .shots { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin: 26px 0 8px; }
+  .shots figure { margin: 0; }
+  .shots img {
+    width: 100%; height: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 14px 36px rgba(15, 23, 42, .10);
+  }
+  .shots figcaption { color: var(--ink-soft); font-size: 13.5px; text-align: center; margin-top: 9px; }
+  @media (max-width: 720px) { .shots { grid-template-columns: 1fr; } }
+
   .group { margin: 30px 0 6px; }
   h2 { font-size: 21px; margin: 0 0 12px; }
   .grid {

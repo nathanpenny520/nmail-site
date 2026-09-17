@@ -3,6 +3,10 @@
 只记本仓库（官网）变更；产品变更看主仓 `Nmail/Nmail/docs/CHANGELOG.md`。
 惯例：最新在上；条目 = `日期 类型: 一句话`，重要改动附动机。
 
+## 2026-09-17
+
+- `feat: 首页/功能页补真实界面截图 + 「AI 晨报」更名跟上`——用户要求官网与文档统一、第一眼有产品质感：首页 hero 下新增主截图（圆角+边框+投影的「窗中窗」效果，`public/shots/` 三张脱敏截图入库）、特性卡下新增总管家/摘要双截图区；功能页顶部新增三图速览（收件箱/总管家/摘要）、修第四组残缺标题「与自动化」→「自动化与集成」；全站「AI 晨报」→「AI 摘要」更名跟上主仓 S-0917-1458（首页特性卡、功能页两卡、projects 卡元数据；历史动态帖按惯例不改写）；功能页文档入口从 GitHub 链接改站内 `/docs/`（文档站内镜像本就齐全）。截图素材取自 promo/pictures 素材池（设置页截图含「AI 晨报」旧文案弃用）。
+
 ## 2026-09-15
 
 - `fix: 下载页 brew 命令改 tap 全名 + trust，新增 macOS .app 压缩包推荐卡`——两处用户反馈：①下载页硬编码的 brew 命令漏改（裸 `brew install nmail` 会装到 homebrew/core 同名无关软件，Homebrew 7 还须先 `brew trust`）——BREW_CMD 改三行全名命令，与主仓 INSTALL.md 对齐；教训：官网硬编码文案（download.astro 等）必须纳入主仓 CLAUDE.md 规范 #11 的四处同步审查，勿只 grep 采样；②v0.4.2 起 CI 随版构建 `nmail-macos-arm64.app.zip`，下载页新增「macOS · App 压缩包（推荐）」卡置顶（解压拖进「应用程序」即用，含首次右键打开提示），`worker.ts` ASSET_NAMES 与 `sync-r2.mjs` FILES 白名单同步纳入 .zip（R2 镜像加速，未命中 302 GitHub 兜底）。

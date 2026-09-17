@@ -1,5 +1,5 @@
 ---
-// 首页（REDESIGN_PLAN §10.1）：Hero + 六特性卡 + 版本徽章 + 下载 CTA。
+// 首页（REDESIGN_PLAN §10.1）：Hero + 主截图 + 六特性卡 + 双截图 + 版本徽章 + 下载 CTA。
 import Base from '../layouts/Base.astro'
 import { fetchLatestRelease, versionOf, FALLBACK_VERSION } from '../lib/releases'
 
@@ -33,8 +33,8 @@ const features = [
     desc: '待回复的邮件 AI 先拟好草稿，你改一改再发；批准/拒绝后 AI 自动收尾总结，审批/自动双模式由你掌控。',
   },
   {
-    icon: '📊', title: '每日摘要 + AI 晨报',
-    desc: '每天固定时间一份邮箱综述：多少封、哪些重要、谁在等你回复；开启晨报，总管家每晨再给你一份「今日建议」。',
+    icon: '📊', title: '每日摘要 + AI 摘要',
+    desc: '每天固定时间一份邮箱综述：多少封、哪些重要、谁在等你回复；开启 AI 摘要，总管家到点巡箱总结并拟好回复草稿（只进待审，绝不自动发送）。',
   },
   {
     icon: '📥', title: '多账号聚合',
@@ -46,7 +46,7 @@ const features = [
   },
   {
     icon: '💻', title: '跨平台使用',
-    desc: 'Windows / macOS / Linux，一个浏览器即可访问；PyPI、Homebrew、winget、安装包多种分发方式。',
+    desc: 'Windows / macOS / Linux，一个浏览器即可访问；一行 uvx 命令全平台启动，也有免安装单文件可选。',
   },
 ]
 ---
@@ -66,6 +66,11 @@ const features = [
     </div>
   </section>
 
+  <section class="shot-hero">
+    <img src="/shots/nmail-demo-inbox.png" alt="Nmail 主界面：多账号聚合收件箱，AI 分类标签、文件夹树、三栏布局" width="1060" loading="eager" />
+    <p class="caption">多账号聚合收件箱 · AI 分类标签 · 文件夹树与快捷键齐备</p>
+  </section>
+
   <section class="grid">
     {features.map((f) => (
       <article class="card">
@@ -75,6 +80,17 @@ const features = [
         <p>{f.desc}</p>
       </article>
     ))}
+  </section>
+
+  <section class="duo">
+    <figure>
+      <img src="/shots/nmail-demo-assistant.png" alt="AI 总管家对话页：一句话任务，多步执行，写操作先审批" width="520" loading="lazy" />
+      <figcaption>AI 总管家：边做边汇报，写操作先审批，做完留痕可撤销</figcaption>
+    </figure>
+    <figure>
+      <img src="/shots/nmail-demo-digest.png" alt="每日摘要页：统计卡片、近 7 天图表、分类分布、待回复清单" width="520" loading="lazy" />
+      <figcaption>每日摘要：图表 + AI 摘要，一天的邮件一眼看完</figcaption>
+    </figure>
   </section>
 
   <section class="band">
@@ -107,6 +123,16 @@ const features = [
   .sub { max-width: 620px; margin: 18px auto 0; color: var(--ink-soft); font-size: 17px; }
   .cta { margin-top: 30px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
+  /* 主截图：圆角 + 边框 + 柔和投影，营造「窗中窗」的产品质感 */
+  .shot-hero { text-align: center; margin: 0 0 10px; }
+  .shot-hero img {
+    width: 100%; height: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 24px 60px rgba(15, 23, 42, .13);
+  }
+  .caption { color: var(--ink-soft); font-size: 13.5px; margin: 14px 0 0; }
+
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -124,6 +150,18 @@ const features = [
   .card p { margin: 0; color: var(--ink-soft); font-size: 14.5px; }
   /* 正文文字里的链接不能只靠颜色区分（无障碍 link-in-text-block），补下划线（.btn 按钮除外） */
   .pill a, .band li a { text-decoration: underline; }
+
+  /* 双截图：左右各一，窄屏自动堆叠 */
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin: 0 0 46px; }
+  .duo figure { margin: 0; }
+  .duo img {
+    width: 100%; height: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, .10);
+  }
+  .duo figcaption { color: var(--ink-soft); font-size: 13.5px; text-align: center; margin-top: 10px; }
+  @media (max-width: 720px) { .duo { grid-template-columns: 1fr; } }
 
   .band {
     display: flex;
