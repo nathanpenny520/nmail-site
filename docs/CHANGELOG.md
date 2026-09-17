@@ -5,6 +5,7 @@
 
 ## 2026-09-17
 
+- `docs: 下载页更新提示区分「检查」与「安装」`——用户反馈曾被旧文案误导（exe 不支持自动更新、uvx 好像支持）：原 uvx 区块提示「应用默认每天自动检查新版本，提醒见通知中心」未区分检查与安装，易读成 uvx 支持应用内自动更新。改写为「所有渠道默认每天自动检查新版本…应用内自动安装更新仅单文件与 pip 渠道支持」，与主仓 INSTALL.md 渠道矩阵一致；`npm run build` 验证产物。
 - `fix: 移动端适配补强`——390px 实测四处问题：①下载页单文件按钮行 `flex-shrink:0` 撑出卡片右缘（Linux x64 被裁掉不可点）——窄屏改独占整行并允许内部换行，下载按钮触控热区加高；②文档页侧栏摊开占 ~470px 才见正文——改紧凑标签流（分组名隐藏、间距收窄、描边圆角），高度砍半；③正文链接 `word-break: break-all` 把 INSTALL.md 拆成「INSTA/LL.md」——改 `overflow-wrap: anywhere`（只在放不下时断）；④基础项：`viewport-fit=cover` + `.container` 安全区 padding（刘海屏横屏不顶进挖孔区）、导航横滑链接补竖向触控热区、`[id]` 锚点 `scroll-margin-top: 84px`（跳转落点躲开 sticky header）。本地 390×844 逐页截图核对，`npm run build` 通过。下载页按钮行的修法随措辞提交 7c61245 入库。
 - `docs: 下载页单文件卡更新措辞对齐主仓`——「更新时下载新版覆盖」漏提应用内自动更新（binary 渠道 v0.4.2 起应用内自动下载就位、重启即新版），改「更新按应用内提示自动完成，或重下新版覆盖」，与主仓 INSTALL.md「更新」节口径一致；`npm run build` 验证产物含新文案。
 - `fix: 下载页 Windows uv 命令补 powershell 前缀`——裸 `irm … | iex` 仅在已打开的 PowerShell 会话内可运行，改官方完整写法 `powershell -ExecutionPolicy ByPass -c "…"`（与主仓文档口径同步）；下载页正文与复制按钮 data-copy 都改，`npm run build` 验证通过。

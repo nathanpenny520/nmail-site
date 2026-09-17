@@ -45,7 +45,7 @@ const appZip = latest?.assets?.find((a) => a.name === APP_ZIP)
       <button class="copy" data-copy="powershell -ExecutionPolicy ByPass -c &quot;irm https://astral.sh/uv/install.ps1 | iex&quot;">复制</button>
     </div>
     <p class="hint"><strong>下次打开</strong>：重开终端，再运行同一条命令即可（包已缓存，第二次起秒级启动）。</p>
-    <p class="hint"><strong>更新版本</strong>：应用默认每天自动检查新版本，提醒见通知中心；uvx 方式升级跑 <code>uvx --refresh --from nmail-app nmail</code>（不刷新缓存会一直沿用首跑的版本）。</p>
+    <p class="hint"><strong>更新版本</strong>：所有渠道默认每天自动<strong>检查</strong>新版本，提醒见通知中心；应用内自动<strong>安装</strong>更新仅单文件与 pip 渠道支持——uvx 升级跑 <code>uvx --refresh --from nmail-app nmail</code>（不刷新缓存会一直沿用首跑的版本）。</p>
     <p class="hint"><strong>想常驻安装</strong>？<code>uv tool install nmail-app</code>，之后任意目录敲 <code>nmail</code>，升级用 <code>uv tool upgrade nmail-app</code>。</p>
   </section>
 
