@@ -70,7 +70,7 @@ const appZip = latest?.assets?.find((a) => a.name === APP_ZIP)
       <article class="card">
         <div class="info">
           <h3>📦 免安装单文件</h3>
-          <p class="note">不想用命令行？Windows 双击即用；macOS/Linux 首次运行需一条终端授权命令（<a href="/docs/install/">见安装文档</a>）。无需 Python；更新时下载新版覆盖。仅提供最新版，历史版本到 <a href={`${REPO_URL}/releases`} target="_blank" rel="noopener">GitHub Releases</a></p>
+          <p class="note">不想用命令行？Windows 双击即用；macOS/Linux 首次运行需一条终端授权命令（<a href="/docs/install/">见安装文档</a>）。无需 Python；更新按应用内提示自动完成，或重下新版覆盖。仅提供最新版，历史版本到 <a href={`${REPO_URL}/releases`} target="_blank" rel="noopener">GitHub Releases</a></p>
         </div>
         <div class="dlrow">
           {DL_ASSETS.map((a) => (
@@ -178,6 +178,9 @@ const appZip = latest?.assets?.find((a) => a.name === APP_ZIP)
   @media (max-width: 720px) {
     .cmdrow.main pre code { font-size: 16px; }
     .os { flex-basis: 100%; }
+    /* 窄屏：单文件按钮行独占整行并允许内部换行——flex-shrink:0 会把它撑出卡片右缘（Linux x64 被裁掉） */
+    .card .dlrow { flex-shrink: 1; flex-basis: 100%; }
+    .dl { padding: 11px 16px; } /* 触控热区加高 */
   }
 
   .req { margin: 44px 0 0; }
