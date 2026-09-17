@@ -65,11 +65,21 @@ const description = meta?.desc ?? 'Nmail 文档'
   aside a:not(.home):hover { color: var(--ink); background: var(--bg-soft); text-decoration: none; }
   aside a.active { color: var(--accent); background: #eef2ff; font-weight: 600; }
 
+  /* 移动端：侧栏摊成紧凑标签流——分组名隐藏、间距收窄，尽快露出正文 */
   @media (max-width: 860px) {
     .docs { grid-template-columns: 1fr; }
-    aside { position: static; display: flex; flex-wrap: wrap; gap: 4px 16px; }
+    aside { position: static; display: flex; flex-wrap: wrap; gap: 2px 8px; }
+    .home { margin-bottom: 4px; font-size: 14px; }
     .group { display: contents; }
     .group-name { display: none; }
+    aside a:not(.home) {
+      padding: 5px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+    aside a:not(.home).active { border-color: var(--accent); }
   }
 
   /* 正文排版（渲染主仓同步来的 Markdown） */
@@ -93,5 +103,6 @@ const description = meta?.desc ?? 'Nmail 文档'
   .prose :global(th), .prose :global(td) { border: 1px solid var(--line); padding: 7px 12px; text-align: left; vertical-align: top; }
   .prose :global(th) { background: var(--bg-soft); font-weight: 600; white-space: nowrap; }
   .prose :global(hr) { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
-  .prose :global(a) { word-break: break-all; }
+  /* 长链接只在放不下时才断（break-all 会把 INSTALL.md 拆成 INSTA/LL.md） */
+  .prose :global(a) { overflow-wrap: anywhere; }
 </style>

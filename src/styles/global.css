@@ -29,7 +29,17 @@ a:hover { text-decoration: underline; }
 
 img { max-width: 100%; }
 
-.container { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+/* 刘海屏横屏不把内容顶进挖孔区；老浏览器回落 20px */
+.container {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 20px;
+  padding-left: max(20px, env(safe-area-inset-left));
+  padding-right: max(20px, env(safe-area-inset-right));
+}
+
+/* 锚点跳转落点躲开 sticky header（移动端两行约 74px，取 84 兜底） */
+[id] { scroll-margin-top: 84px; }
 
 .btn {
   display: inline-flex;
