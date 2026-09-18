@@ -5,6 +5,7 @@
 
 ## 2026-09-18
 
+- `feat: 下载页 uvx 区块补桌面图标与空闲退出口径`——主仓 v0.4.5 把 uvx 做成一等公民（图标指向 uvx 命令不死链+每次双击最新版、关标签 90s 后台自动退出、首跑横幅，主仓 b64aa62）：「下次打开」行补图标一条命令 `uvx --from nmail-app nmail install-shortcut`；「更新版本」行修正为实测口径——双击图标/终端裸命令均紧跟新发布，`--refresh` 降为兜底；`npm run build` 验证。
 - `fix: 更新日志页「Full Changelog」重复行剔除`——用户截图 v0.4.3 说明区连排 5 行重复（根因在主仓发版工作流：多个 matrix 上传步骤各带 generate_release_notes，对已存在 Release 每次更新 API 都往 body 追加生成说明；主仓 4b86cd7 已修并去重存量）。官网侧构建期 `lib/releases.ts` 新增 `cleanBody` 兜底——整行剔除 `**Full Changelog**`（卡片头部本就有 GitHub 链接）并压掉多余空行；`npm run build` 验证产物 0 处残留、v0.4.4 正常上榜。
 
 ## 2026-09-17
