@@ -29,10 +29,23 @@ async function getJson(url: string): Promise<unknown> {
   return res.json()
 }
 
+/** 清理发布说明：GitHub 生成的「**Full Changelog**: …」行在已有 Release 被再次
+ * 更新（资产分批上传/失败重跑）时会被 API 重复追加（v0.4.3 曾连排 5 遍），且
+ * 卡片头部本就有「在 GitHub 查看」链接，站点统一整行剔除并压掉多余空行。 */
+function cleanBody(body: string | null): string | null {
+  if (!body) return body
+  return body
+    .split('\n')
+    .filter((line) => !line.trimStart().startsWith('**Full Changelog**'))
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
 export async function fetchLatestRelease(): Promise<Release | null> {
   try {
     const list = (await getJson(`${REPO_API}?per_page=1`)) as Release[]
-    return list[0] ?? null
+    return list[0] ? { ...list[0], body: cleanBody(list[0].body) } : null
   } catch {
     return null
   }
@@ -40,7 +53,9 @@ export async function fetchLatestRelease(): Promise<Release | null> {
 
 export async function fetchReleases(perPage = 10): Promise<Release[]> {
   try {
-    return ((await getJson(`${REPO_API}?per_page=${perPage}`)) as Release[]) ?? []
+    return (((await getJson(`${REPO_API}?per_page=${perPage}`)) as Release[]) ?? []).map(
+      (r) => ({ ...r, body: cleanBody(r.body) }),
+    )
   } catch {
     return []
   }
